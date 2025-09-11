@@ -1,17 +1,17 @@
 import tkinter as tk
-from graphic_manager import Window, PagePrincipal, Page, ScrollFrame
+from graphic_tools import Window, PagePrincipal, Page, ScrollFrame, Tabla
 
-root = Window('Ventana', (500, 500))
+root = Window('Ventana', (1920, 500))
 f = PagePrincipal(root, bg='#E8CFB0')
 f2 = Page(root, bg='#CEF5EB')
 b = tk.Button(f, text='saluda', command=lambda: f.change_page(f2), cursor='fleur')
 b.pack(padx=50, pady=10, side='bottom')
 frame = tk.Frame(f2, bg='#BC9FCF')
 frame.pack()
-tabla = ScrollFrame(f2, width=500, height=300, bg='#7DCC4E')
+tabla = ScrollFrame(f2, width=500, height=300, bg='#7DCC4E', hbar_position='bottom', vbar_position='left')
 tabla.pack()
 
-for i in range(4):
+for i in range(12):
     l2 = tk.Label(tabla.scr_frame, text='HOLA')
     tabla.pack_on_scroll(l2, side='left')
 
@@ -34,6 +34,19 @@ f3 = Page(root, bg='#FFE46E')
 l_f3 = tk.Label(f3, text='Hola')
 l_f3.pack()
 
+scframe_f3 = ScrollFrame(f3, 'left', 'bottom', width=200, height=1080, bg='#4B6AFF')
+scframe_f3.pack(side="right")
+
+l_a = tk.Label(scframe_f3.scr_frame, text='Hola')
+scframe_f3.pack_on_scroll(l_a)
+
 b_f3 = tk.Button(f3, text='Volver al menú principal', command=lambda:f3.change_page(f))
 b_f3.pack()
+
+a = [['1', 'hola', '3'],
+     ['1', 'Coño', '2']]
+
+l = Tabla(master=f, matrix=a, width=100, height=200)
+l.pack(side='left')
+
 root.mainloop()

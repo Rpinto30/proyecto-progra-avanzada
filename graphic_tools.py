@@ -1,5 +1,4 @@
 import tkinter as tk
-import warnings #Para hacer advertencias en el código
 
 class Window(tk.Tk):
     # DOCSTRING: https://www.datacamp.com/tutorial/docstrings-python
@@ -107,11 +106,11 @@ class PagePrincipal(Page):
         master.set_principal_page(self)
 
 class ScrollFrame(tk.Frame):
-    def __init__(self, master, vbar_position="right", hbar_position='bottom', **kwargs):
+    def __init__(self, master, vbar_position=None, hbar_position=None, **kwargs):
         super().__init__(master=master, **kwargs)
         if int(self.cget('width')) > 0 and int(self.cget('height')) > 0: self.pack_propagate(False)
-        self.__canvas_scroll = tk.Canvas(self, bg= '#5ECFFF')
-        self.__canvas_scroll.pack_propagate(False)
+        self.__canvas_scroll = tk.Canvas(self, width=self.cget('width'), height=self.cget('height'),bg= self.cget('bg'))
+        #self.__canvas_scroll.pack_propagate(False)
         # BARRAS PARA MOVER (SE ME OLVIDO COMO SE DICEN EN ESPAÑOL xd)
         self.__vbar = tk.Scrollbar(self, orient="vertical")  # VERTICAL BAR
         self.__vbar.config(command=self.__canvas_scroll.yview)
@@ -119,12 +118,12 @@ class ScrollFrame(tk.Frame):
         self.__hbar.config(command=self.__canvas_scroll.xview)
         #Configura el vbar y hbar para alinearlos dentro de este frame y se ajusta el comando que se llama cuando se actualiza el scroll
         self.__canvas_scroll.config(xscrollcommand=self.__hbar.set, yscrollcommand=self.__vbar.set)
-        self.__vbar.pack(side=vbar_position, fill="y")
-        self.__hbar.pack(side=hbar_position, fill="x")
+        if vbar_position is not None: self.__vbar.pack(side=vbar_position, fill="y")
+        if hbar_position is not None: self.__hbar.pack(side=hbar_position, fill="x")
 
         self.__canvas_scroll.pack(side="left", expand=True, fill='both')
-        self.__sub_frame = tk.Frame(self.__canvas_scroll, width=self.cget('width'), height=self.cget('height'))
-        self.__sub_frame.pack_propagate(False)
+        self.__sub_frame = tk.Frame(self.__canvas_scroll, width=self.cget('width'), height=self.cget('height'), bg= self.cget('bg'))
+        #self.__sub_frame.pack_propagate(False)
         self.__canvas_scroll.create_window((0, 0), window=self.__sub_frame, anchor="nw")
         self.__sub_frame.bind("<Configure>",
                               lambda e: self.__canvas_scroll.configure(
@@ -138,3 +137,27 @@ class ScrollFrame(tk.Frame):
     @property
     def scr_frame(self):
         return self.__sub_frame
+
+    @property
+    def cnv_frame(self): return self.__canvas_scroll
+
+class Tabla(ScrollFrame):
+    def __init__(self, master,matrix:list, vbar_position=None, hbar_position=None, **kwargs):
+        super().__init__(master, vbar_position, hbar_position, **kwargs)
+        self.__table = tk.Frame()
+        for i in range(len(matrix[0])-1):
+            row = []
+            for j in range(len(matrix)):
+                e = tk.Entry(self.__table, width=self.cget('width'), fg='black', font=("Arial", self.cget('height')), borderwidth=1,
+                             relief="solid")
+                if i == 0:
+                    e.config(readonlybackground='#A9B1D1')
+                else:
+                    e.config(readonlybackground='#D5D9E8')
+                e.grid(row=i, column=j)
+                e.insert(tk.END, matrix[i][j])
+                e.config(state='readonly')
+                row.append(e)
+            #self.__table.append(row)
+            self.pack_on_scroll(self.__table)
+
