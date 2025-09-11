@@ -13,8 +13,7 @@ tabla.pack()
 
 for i in range(4):
     l2 = tk.Label(tabla.scr_frame, text='HOLA')
-    tabla.pack_on_scroll(l2, side='right', anchor='ne')
-
+    tabla.pack_on_scroll(l2, side='left')
 
 def texto_prueba(texto):
     global  text_v, l_f3

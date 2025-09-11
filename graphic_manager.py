@@ -10,9 +10,9 @@ class Window(tk.Tk):
         usando set_principal_page()
 
         :param title: Título de la ventana
-        :param geometry: Geometria en pixeles de la ventana
+        :param geometry: Geometria en píxeles de la ventana
         :param icon_image: Si existe, coloca una imagen de icono
-        :param kwargs: Hereda parametros de la clase tk.TK()
+        :param kwargs: Hereda parámetros de la clase tk.TK()
         """
         super().__init__(**kwargs)
         self.__principal_page = None
