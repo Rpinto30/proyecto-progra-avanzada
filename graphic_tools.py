@@ -145,22 +145,25 @@ class Tabla(ScrollFrame):
                  font_size = 12, propagate_width:int=0, propagate_height:int=0,
                  borderwidth:int= 1,
                  color_header:str='#A9B1D1', color_first_colum:str='',
+                 color_first:str='',
                  **kwargs):
         super().__init__(master, vbar_position, hbar_position,**kwargs)
+        self.__rows =len(matrix)
+        self.__colums=len(matrix[0])
         self.__table = tk.Frame(self.scr_frame, bg='#58FFB2')
-        for i in range(len(matrix)): #ROWS
+        for i in range(self.__rows): #ROWS
             row = []
             self.__table.grid_rowconfigure(i, weight=1)
-            for j in range(len(matrix[0])): #COLUMS
+            for j in range(self.__colums): #COLUMS
                 try:
                     e = tk.Label(self.__table, fg='black', font=("Arial", font_size), text=matrix[i][j], relief='solid', borderwidth=borderwidth)
                 except IndexError: e = tk.Label(self.__table, fg='black', font=("Arial", font_size), text=" ", relief='solid', borderwidth=borderwidth)
                 e.config(width=cell_width, height=cell_height)
                 #---------------------COLOR DE COLUMNAS---------------------------
-                if i == 0:
-                    e.config(bg='#A9B1D1')
-                else:
-                    pass#e.config(readonlybackground='#D5D9E8')
+                if i == 0 and j%self.__colums==0 and color_first != '': e.config(bg=color_first)
+                elif i == 0 and color_header != '': e.config(bg=color_header)
+                elif j%self.__colums==0 and color_first_colum != '': e.config(bg=color_first_colum)
+
                 e.grid(row=i, column=j)
                 row.append(e)
         if propagate_height <= 0 or propagate_width == 0: self.master.update_idletasks()  # Actualiza tkinter para la lectura de la geometria
@@ -179,4 +182,25 @@ class Tabla(ScrollFrame):
 
         self.pack_on_scroll(self.__table)
 
+    def pack_table(self, **kwargs):
+        self.pack(**kwargs)
 
+    def confi_row(self, index=0, height_=1):
+        """
+        Ajusta el tamaño de toda una columna
+        :param index: El index de la columna que se desea modificar, por defecto 0
+        :param height_: El tamaño que se desea que tenga la calumna seleccionada
+        """
+        for n_row, row in enumerate(self.__table.winfo_children(),0):
+            if  n_row//self.__colums <= index:
+                row.config(height=height_)
+
+    def confi_colum(self, index=0, width_=1):
+        """
+        Ajusta el tamaño de toda una columna
+        :param index: El index de la columna que se desea modificar, por defecto 0
+        :param width_: El tamaño que se desea que tenga la calumna seleccionada
+        """
+        for n_row, row in enumerate(self.__table.winfo_children(),0):
+            if index == n_row%self.__colums:
+                row.config(width=width_)
