@@ -43,10 +43,12 @@ scframe_f3.pack_on_scroll(l_a)
 b_f3 = tk.Button(f3, text='Volver al menú principal', command=lambda:f3.change_page(f))
 b_f3.pack()
 
-a = [['Hola', 'Hola'],
-     ['Hola', 'Hola']]
+a = [['1','Hola', 'adios', 'aa'],
+     ['2','Hola', 'aaaa', 'pancjo'],
+     ['1', 'adios', 'zxczxc'],
+     ['4','Adios', 'adios'],]
 
-l = Tabla(master=f, matrix=a, cell_width=0, cell_height=30, hbar_position='bottom')
+l = Tabla(master=f, matrix=a, vbar_position='left', hbar_position='bottom', borderwidth=2)
 l.pack(side='left')
 
 root.mainloop()

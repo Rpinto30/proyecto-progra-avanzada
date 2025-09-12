@@ -139,15 +139,22 @@ class ScrollFrame(tk.Frame):
         return self.__sub_frame
 
 class Tabla(ScrollFrame):
-    def __init__(self, master,matrix:list, vbar_position=None, hbar_position=None, cell_width=10, cell_height=10, **kwargs):
+    def __init__(self, master, matrix:list,
+                 vbar_position=None, hbar_position=None,
+                 cell_width=10, cell_height=1,
+                 font_size = 12, propagate_width:int=0, propagate_height:int=0,
+                 borderwidth:int= 1,
+                 **kwargs):
         super().__init__(master, vbar_position, hbar_position,**kwargs)
         self.__table = tk.Frame(self.scr_frame, bg='#58FFB2')
         for i in range(len(matrix)): #ROWS
             row = []
             self.__table.grid_rowconfigure(i, weight=1)
             for j in range(len(matrix[0])): #COLUMS
-                e = tk.Label(self.__table, fg='black', font=("Arial", 30), text=matrix[i][j], relief='solid')
-                e.config(width=5, height=2)
+                try:
+                    e = tk.Label(self.__table, fg='black', font=("Arial", font_size), text=matrix[i][j], relief='solid', borderwidth=borderwidth)
+                except IndexError: e = tk.Label(self.__table, fg='black', font=("Arial", font_size), text=" ", relief='solid', borderwidth=borderwidth)
+                e.config(width=cell_width, height=cell_height)
                 #---------------------COLOR DE COLUMNAS---------------------------
                 if i == 0:
                     pass#e.config(readonlybackground='#A9B1D1')
@@ -155,10 +162,20 @@ class Tabla(ScrollFrame):
                     pass#e.config(readonlybackground='#D5D9E8')
                 e.grid(row=i, column=j)
                 row.append(e)
-        self.master.update_idletasks() #Actualiza tkinter para la lectura de la geometria
-        self._canvas_scroll.config(width=[a for a in self.__table.winfo_children()][0].winfo_width()*(len(matrix[0])))
-        print([a for a in self.__table.winfo_children()][0].winfo_reqwidth())
-        self._canvas_scroll.config(height=[a for a in self.__table.winfo_children()][0].winfo_reqheight()*(len(matrix)))
+        if propagate_height <= 0 or propagate_width == 0: self.master.update_idletasks()  # Actualiza tkinter para la lectura de la geometria
+        if propagate_width <= 0:
+            self._canvas_scroll.config(
+                width=[a for a in self.__table.winfo_children()][0].winfo_width()*(len(matrix[0])))
+        else:
+            self._canvas_scroll.config(
+                width=[a for a in self.__table.winfo_children()][0].winfo_width() * int(propagate_width))
+        if propagate_height <= 0:
+            self._canvas_scroll.config(
+                height=[a for a in self.__table.winfo_children()][0].winfo_reqheight()*(len(matrix)))
+        else:
+            self._canvas_scroll.config(
+                height=[a for a in self.__table.winfo_children()][0].winfo_reqheight() * int(propagate_height))
+
         self.pack_on_scroll(self.__table)
 
 
