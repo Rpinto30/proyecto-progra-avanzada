@@ -43,7 +43,7 @@ scframe_f3.pack_on_scroll(l_a)
 b_f3 = tk.Button(f3, text='Volver al menú principal', command=lambda:f3.change_page(f))
 b_f3.pack()
 
-a = [['1','Hola', 'adios', 'aa'],
+a = [[' ','Hola', 'adios', 'aa'],
      ['2','Hola', 'aaaa', 'pancjo'],
      ['1', 'adios', 'zxczxc'],
      ['4','Adios', 'adios'],]

@@ -144,6 +144,7 @@ class Tabla(ScrollFrame):
                  cell_width=10, cell_height=1,
                  font_size = 12, propagate_width:int=0, propagate_height:int=0,
                  borderwidth:int= 1,
+                 color_header:str='#A9B1D1', color_first_colum:str='',
                  **kwargs):
         super().__init__(master, vbar_position, hbar_position,**kwargs)
         self.__table = tk.Frame(self.scr_frame, bg='#58FFB2')
@@ -157,7 +158,7 @@ class Tabla(ScrollFrame):
                 e.config(width=cell_width, height=cell_height)
                 #---------------------COLOR DE COLUMNAS---------------------------
                 if i == 0:
-                    pass#e.config(readonlybackground='#A9B1D1')
+                    e.config(bg='#A9B1D1')
                 else:
                     pass#e.config(readonlybackground='#D5D9E8')
                 e.grid(row=i, column=j)
