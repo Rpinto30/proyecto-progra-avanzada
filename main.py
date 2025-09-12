@@ -47,7 +47,6 @@ a = [[' ','Hola', 'adios', 'aa'],
      ['2','Hola', 'aaaa', 'pancjo'],
      ['1', 'adios', 'zxczxc'],
      ['4','Adios', 'adios'],]
-
 l = Tabla(master=f, matrix=a, vbar_position='left', hbar_position='bottom', borderwidth=2)
 l.pack(side='left')
 
