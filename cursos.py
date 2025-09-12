@@ -52,3 +52,4 @@ curs = {cour.course_id: cour, cour2.course_id: cour2, cour3.course_id: cour3 }
 print(curs[cour.course_id].teacher)
 
 
+
