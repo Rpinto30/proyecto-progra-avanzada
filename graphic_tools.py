@@ -58,6 +58,8 @@ class Window(tk.Tk):
     @property
     def current_frame(self): return self.__current_frame
 
+    @property
+    def principal_page(self): return self.__principal_page
 
 class Page(tk.Frame):
     # **kwargs para heredar todos los argumentos de tk.Frame
@@ -82,7 +84,7 @@ class Page(tk.Frame):
     def clear_widgest(self, widgets: list[tk.Widget]):
         self.clear_widgest.extend(widgets)
 
-    def _clear_widgets_in_frame(self):
+    def clear_widgets_in_frame(self):
         for widget in self._clear_widgest:
             if isinstance(widget, tk.Label): widget.config(text=' ')
             elif isinstance(widget, tk.Entry): widget.delete(0, tk.END)
@@ -96,9 +98,19 @@ class Page(tk.Frame):
         :param page: El frame al que se quiere transportar
         """
         if self.master.current_frame == self:
-            if self._clear_widgest: self._clear_widgets_in_frame()
+            if self._clear_widgest: self.clear_widgets_in_frame()
             self.master.change_frame(page)
         else: raise SyntaxError("Estas realizando un cambio de página desde un frame que no es el actual")
+
+    def return_main(self):
+        if self.master.current_frame == self:
+            if self._clear_widgest: self.clear_widgets_in_frame()
+            self.master.change_frame(self.master.principal_page)
+        else:
+            raise SyntaxError("Estas realizando un cambio de página desde un frame que no es el actual")
+
+    def close_menu(self):
+        pass
 
 class PagePrincipal(Page):
     def __init__(self, master, **kwargs):
@@ -231,6 +243,6 @@ class Tabla(ScrollFrame):
                 row.config(width=width_)
 
 
-class Proccecs_file(tk.Frame):
-    def __init__(self, master, **kwargs):
-        super.__init__(master=master, **kwargs)
+class ProccesFile(tk.Frame):
+    def __init__(self, master:Window, **kwargs):
+        super().__init__(master=master, **kwargs)
