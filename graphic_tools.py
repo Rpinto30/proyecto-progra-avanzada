@@ -145,8 +145,32 @@ class Tabla(ScrollFrame):
                  font_size = 12, propagate_width:int=0, propagate_height:int=0,
                  borderwidth:int= 1,
                  color_header:str='#A9B1D1', color_first_colum:str='',
-                 color_first:str='',
+                 color_first:str='', color_table:str='',
                  **kwargs):
+        """
+        Crea una tabla con información que se le pase, necesita una matriz
+        [['VALOR1','VALOR2'],['VALOR3','VALOR4']], en caso faltar un item se llena la celda estando vacía.
+
+        Por defecto la tabla se adapta al tamaño de columnas y filas, pero con propagate_width y
+        propagate_height se puede configurar hasta cuantas filas o columnas se desea que aparezcan
+        cuando la tabla se genera.
+
+        :param master: En donde se coloca la tabla
+        :param matrix: La matriz que muestra la tabla
+        :param vbar_position: Opcional, si se desea tener una barra vertical
+        :param hbar_position: Opciona, si se desea tener una barra horizontal
+        :param cell_width: El largo de las celdas, la cantidad de caracteres
+        :param cell_height: El alto de las celdas
+        :param font_size: El tamaño de la fuente que se coloca en todas las celdas
+        :param propagate_width: Opcional, la cantidad de columnas que entran en la tabla (recomendación: usar con hbar_position)
+        :param propagate_height:Opcional, la cantidad de filas que entran en la tabla (recomendación: usar con vbar_position)
+        :param borderwidth: Opcional, el tamaño del borde de la tabla
+        :param color_header: Opcional, el color del encabezado de la tabla
+        :param color_first_colum: Opcional, el color de la primera columna de la tabla
+        :param color_first: Opcional, el color de la primera celda de la tabla
+        :param color_table: Opcional, el color general de la tabla
+        :param kwargs:
+        """
         super().__init__(master, vbar_position, hbar_position,**kwargs)
         self.__rows =len(matrix)
         self.__colums=len(matrix[0])
@@ -159,6 +183,7 @@ class Tabla(ScrollFrame):
                     e = tk.Label(self.__table, fg='black', font=("Arial", font_size), text=matrix[i][j], relief='solid', borderwidth=borderwidth)
                 except IndexError: e = tk.Label(self.__table, fg='black', font=("Arial", font_size), text=" ", relief='solid', borderwidth=borderwidth)
                 e.config(width=cell_width, height=cell_height)
+                if color_table != '': e.config(bg=color_table)
                 #---------------------COLOR DE COLUMNAS---------------------------
                 if i == 0 and j%self.__colums==0 and color_first != '': e.config(bg=color_first)
                 elif i == 0 and color_header != '': e.config(bg=color_header)
@@ -204,3 +229,8 @@ class Tabla(ScrollFrame):
         for n_row, row in enumerate(self.__table.winfo_children(),0):
             if index == n_row%self.__colums:
                 row.config(width=width_)
+
+
+class Proccecs_file(tk.Frame):
+    def __init__(self, master, **kwargs):
+        super.__init__(master=master, **kwargs)

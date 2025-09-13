@@ -1,55 +1,20 @@
 import tkinter as tk
-from graphic_tools import Window, PagePrincipal, Page, ScrollFrame, Tabla
+from graphic_tools import Window, PagePrincipal
 
 root = Window('Ventana', (1920, 500))
-f = PagePrincipal(root, bg='#E8CFB0')
-f2 = Page(root, bg='#CEF5EB')
-b = tk.Button(f, text='saluda', command=lambda: f.change_page(f2), cursor='fleur')
-b.pack(padx=50, pady=10, side='bottom')
-frame = tk.Frame(f2, bg='#BC9FCF')
-frame.pack()
-tabla = ScrollFrame(f2, width=500, height=300, bg='#7DCC4E', hbar_position='bottom', vbar_position='left')
-tabla.pack()
 
-for i in range(12):
-    l2 = tk.Label(tabla.scr_frame, text='HOLA')
-    tabla.pack_on_scroll(l2, side='left')
+class Login(PagePrincipal):
+    def __init__(self, master, **kwargs):
+        super().__init__(master=master,bg='red', **kwargs)
+        b = tk.Button(self, text='Sacar toplevel', command=lambda:self.__crear_usuario())
+        b.pack(pady=50)
 
-def texto_prueba(texto):
-    global  text_v, l_f3
-    text_v = "Hola "+ str(texto)
-    l_f3.config(text=text_v)
-    f2.change_page(f3)
+    def __crear_usuario(self):
+        top_level = tk.Toplevel(self.master)
+        top_level.pack_propagate(False) #PARA EVITAR QUE SE DEFORME AL HACER UN PACK
+        txt = tk.Label(top_level, text='Holaaaaaaaaa')
+        txt.pack()
 
-text_v = tk.StringVar()
-for i in range(20):
-    b2 = tk.Button(tabla.scr_frame, text=f'saluda {i}', command=lambda: texto_prueba(i))
-    tabla.pack_on_scroll(b2)
-
-b = tk.Button(frame, text='volver', command=lambda: f2.change_page(f))
-b.pack(padx=50, pady=10, side='right')
-
-f3 = Page(root, bg='#FFE46E')
-
-l_f3 = tk.Label(f3, text='Hola')
-l_f3.pack()
-
-scframe_f3 = ScrollFrame(f3, 'left', 'bottom', width=200, height=1080, bg='#4B6AFF')
-scframe_f3.pack(side="right")
-
-l_a = tk.Label(scframe_f3.scr_frame, text='Hola')
-scframe_f3.pack_on_scroll(l_a)
-
-b_f3 = tk.Button(f3, text='Volver al menú principal', command=lambda:f3.change_page(f))
-b_f3.pack()
-
-a = [[' ','Hola', 'adios', 'aa','bb','cc'],
-     ['2','Hola', 'aaaa', 'pancjo'],
-     ['1', 'adios', 'zxczxc'],
-     ['4','Adios', 'adios'],]
-l = Tabla(master=f, matrix=a,
-          vbar_position='left', hbar_position='bottom', borderwidth=2,
-          cell_height=3, cell_width=5, color_first_colum='#6662A0', color_first='#395288')
-l.pack_table(side='left')
-
+f = Login(root)
 root.mainloop()
+
