@@ -1,5 +1,5 @@
 import tkinter as tk
-from graphic_tools import Window, PagePrincipal, Page
+from menus.graphic_tools import Window, PagePrincipal, Page
 
 root = Window('Ventana', (1920, 500))
 #CLASE LOGIN
