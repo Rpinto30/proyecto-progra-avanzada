@@ -18,7 +18,7 @@ class DataBase:
     @property
     def instructors(self): return self.__instructors
     @property
-    def instructors(self): return self.__courses
+    def courses(self): return self.__courses
 
 
     #Reutilizando parte de la lógica del parcial
@@ -29,9 +29,9 @@ class DataBase:
             if name_file == 'students':
                 json.dump(self.__students, write_file)
             elif name_file == 'instructors':
-                json.dump(self.__students, write_file)
+                json.dump(self.__instructors, write_file)
             elif name_file == 'courses':
-                json.dump(self.__students, write_file)
+                json.dump(self.__courses, write_file)
 
     def load_data(self, name_file):
         try:
