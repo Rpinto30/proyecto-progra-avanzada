@@ -11,6 +11,7 @@ root = Window('Ventana', (1920, 500))
 class Login(PagePrincipal):
     def __init__(self, master, **kwargs):
         super().__init__(master=master,bg='red', **kwargs)
+
         #AQUÍ IRIA LOS BOTONES, FRAMES, TEXTOS DEL LOGIN (los botones de abajo son un ejemplo nada más)
         b = tk.Button(self, text='Sacar toplevel', command=lambda:self.__crear_usuario()) #<- BOTÓN EJEMPLO
         b.pack(pady=50) #<- BOTÓN EJEMPLO
@@ -19,40 +20,50 @@ class Login(PagePrincipal):
         e.pack()
         #FUNCIÓN PARA CAMBIAR AL X MENÚ, en vez de instanciar meú de prueba, instanciar el menú que se desea
         def cambiar_a_prueba():
-            m = MenuPrueba(master=self.master, bg='green', who=str(e.get())) #ISNTANCIA DEL MENÚ QUE SE DESEE
-            self.change_page(m) #SE CAMBIA DE PAGINA (OBLIGATORIO)
+            self.m_prubea = MenuPrueba(self.master)
+            self.m_prubea.set_who(e.get())
+            self.change_page(self.m_prubea)
+            #self.change_page(MenuPrueba(master=self.master, bg='green', who=str(e.get()))) #SE CAMBIA DE PAGINA (OBLIGATORIO)
 
         b_cambio = tk.Button(self, text='Cambiar página', command=lambda:cambiar_a_prueba()) #<- BOTÓN EJEMPLO
         b_cambio.pack()#<- BOTÓN EJEMPLO
 
-    #ESTE ES UN EJEMPLO PARA UN TOPLEVEL
+        #Al final, agregar siempre el clear_widgest a los widgets que se desean limpiar cuando se cargue otra vez el programa
+        self.clear_widgest = [e]
+
+        #ESTE ES UN EJEMPLO PARA UN TOPLEVEL
     def __crear_usuario(self):
         top_level = tk.Toplevel(self.master)
         top_level.pack_propagate(False) #PARA EVITAR QUE SE DEFORME AL HACER UN PACK
         txt = tk.Label(top_level, text='Holaaaaaaaaa')
         txt.pack()
 
-#Los menus van a ser dinamicos, crean y destruyen conforme el programa los necesite
 class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
-    def __init__(self, master:Window, who, **kwargs): #Digamos que "who" es un string de quíen es el menú
-        super().__init__(master=master, **kwargs)
+    def __init__(self, master:Window, **kwargs): #Digamos que "who" es un string de quíen es el menú
+        super().__init__(master=master, bg='green', **kwargs)
+        self.who = ''
         #COLOCAR LO VISUAL DE ESTE MENÚ:
-        l = tk.Label(self, text=f'Hola {who}!')
-        l.pack()
-        def close_menu():
-            self.change_page(master.principal_page)
-        #para volver al login (la unica que va a perdurar) se cambia a lo que guardo la root(aquí master) en login_page
+        self.l = tk.Label(self, text=f'Hola {self.who}!')
+        self.l.pack()
+
+        def close_menu():self.change_page(master.principal_page) #para volver al login
 
         def add_st_test():
-            i = Instructor(nombre.get(), contra.get())
-            """
-            st = clases_internas.usuarios.Student( nombre.get(), contra.get())
-            print(st.user_id)
-            data.students[str(st.user_id)] = {'name': nombre.get(), 'contra':contra.get()}
-            data.save_data('students')
-            """
+            i =Instructor(nombre.get(), contra.get())
+            self.inf.config(text=f'Se agregó {nombre.get()}, su codigo es {i.user_id}')
 
-        tk.Label(self, text='Nombre:').pack()
+            #self.change_page(CreateCourse(self.master, teacher=i))
+
+        def iniciar_sesion():
+            #En este ejemplo nombre.get() sustituye a lo que seria un code.get()
+            if str(nombre.get()) in data.instructors:
+                if data.instructors[str(nombre.get())]['password'] == str(contra.get()):
+                    self.change_page(CreateCourse(self.master,
+                                                  teacher=Instructor(data.instructors[str(nombre.get())]['name'], contra.get(), str(nombre.get())),
+                                                  father=self))
+            else: self.inf.config(text='No se pudo iniciar sesión, codigo no encontrado')
+
+        tk.Label(self, text='Nombre o código:').pack()
         nombre = tk.Entry(self)
         nombre.pack()
 
@@ -60,12 +71,38 @@ class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
         contra = tk.Entry(self)
         contra.pack()
 
-        tk.Button(self, text='Añadir algo a estudiantes', command=lambda:add_st_test()).pack(pady=20)
-        tk.Button(self, text='Probar base de datos', command=lambda:print(data.students)).pack(pady=20)
+        tk.Button(self, text='Crear Instructor', command=lambda:add_st_test()).pack(pady=20)
+        tk.Button(self, text='Iniciar sesión', command=lambda: iniciar_sesion()).pack(pady=20)
 
         tk.Button(self,text='Regresar', command= lambda: close_menu()).pack()
 
+        self.inf = tk.Label(self, text='')
+        self.inf.pack()
+
+        self.clear_widgest = [nombre, contra]
+
+    def set_who(self, who):
+        self.who = who
+        self.l.config(text=f"Hola {who}!")
+
+class CreateCourse(Page):
+    def __init__(self, master, teacher:Instructor, father, **kwargs):
+        super().__init__(master=master, bg='gray', **kwargs)
+        tk.Label(self, text=f"Bienvenido {teacher.name}").pack(pady=20)
+        tk.Label(self, text='Nombre del curso').pack()
+        self.nombre = tk.Entry(self)
+        self.nombre.pack(pady=20)
+
+        def c_curso():
+            teacher.create_course(self.nombre.get())
+
+        tk.Button(self, text='Crear curso', command=lambda: c_curso()).pack()
+        tk.Button(self, text='regresar', command=lambda:self.change_page(father)).pack() #volver al anterior
+
+
+#CREACION DE MENÚS (Instancias)
 login = Login(root)
+
 root.mainloop()
 
 

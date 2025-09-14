@@ -1,11 +1,10 @@
 import random
 from data.data_base import data
-from .cursos import Courses #IMPORT RELATIVO (Por eso el __init en la carpeta, para especificar que esta carpeta es un paquete)
-#https://realpython-com.translate.goog/absolute-vs-relative-python-imports/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc
-
+from clases_internas.cursos import Courses
 class User:
-    def __init__(self, name,  password):
-        self._user_id = self._create_code()
+    def __init__(self, name,  password, id_=''):
+        if id_ == '': self._user_id = self._create_code()
+        else: self._user_id = id_
         self._name = name
         self._password = password
         self.__courses = {}
@@ -18,6 +17,9 @@ class User:
     def password(self):
         return self._password
 
+    @property
+    def name(self): return self._name
+
     def _create_code(self):
         pass
 
@@ -25,8 +27,8 @@ class User:
         return f"ID de usuario: {self._user_id} \n Cursos: {self.__courses}"
 
 class Instructor(User):
-    def __init__(self, name, password):
-        super().__init__( name, password)
+    def __init__(self, name, password, user_id=''):
+        super().__init__(name, password, user_id)
         self.__courses = {}
         self.create_instructor(name, password)
 
@@ -53,7 +55,6 @@ class Instructor(User):
             course = Courses(entry_name, self)
             data.courses[course.course_id] = {
                 "corse_name": course.course_name,
-                "course_id": course.course_id,
                 "teacher": data.instructors[self.user_id]
             }
             data.save_data("courses")
@@ -73,8 +74,8 @@ class Instructor(User):
 
 
 class Student(User):
-    def __init__(self, name, password):
-        super().__init__( name, password)
+    def __init__(self, name, password,user_id=''):
+        super().__init__( name, password, user_id)
         self.__courses = {}
         self.create_student(name, password)
 
@@ -89,7 +90,7 @@ class Student(User):
             else:
                 return -4
         else:
-            data.students[self.user_id] = {
+            data.students[self._user_id] = {
                 "name": self._name,
                 "password": self._password
             }
@@ -107,9 +108,3 @@ class Student(User):
                 repeat_times += 1
                 if repeat_times > 10 **digits: digits+=1
         return final_code
-
-
-tea1 = Instructor("Tilin ", "123")
-#tea1.create_course("skibidi")
-#student1 = Student("Rodrigo", "1234")
-print([_ for _ in data.students])

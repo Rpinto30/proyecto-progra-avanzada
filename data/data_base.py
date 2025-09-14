@@ -9,7 +9,6 @@ class DataBase:
         self.__courses = {}
 
         #STUDENTS
-        for _ in ['sudents', 'instructos', 'courses']: pass
         try:
             self.__students = self.load_data('students')
         except json.decoder.JSONDecodeError: #Cuando se borran las llaves del json agregarlas
