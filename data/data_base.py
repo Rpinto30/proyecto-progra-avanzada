@@ -11,15 +11,14 @@ class DataBase:
         self.__instructors = self.load_data('instructors')
         self.__courses = self.load_data('courses')
 
-
     @property
-    def dict_students(self): return self.__students
-    @dict_students.setter
-    def set_students(self, st): self.__students = st
+    def students(self): return self.__students
+    @students.setter
+    def students(self, st): self.__students = st
     @property
-    def dict_instructors(self): return self.__instructors
+    def instructors(self): return self.__instructors
     @property
-    def dict_courses(self): return self.__courses
+    def instructors(self): return self.__courses
 
 
     #Reutilizando parte de la lógica del parcial

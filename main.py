@@ -44,10 +44,10 @@ class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
         #para volver al login (la unica que va a perdurar) se cambia a lo que guardo la root(aquí master) en login_page
 
         def add_st_test():
-            if ID.get() not in data.dict_students:
+            if ID.get() not in data.students:
                 st = Student(ID.get(), nombre.get(),contra.get(), '')
                 print(st.user_id)
-                data.set_students[str(ID.get())] = {'name': nombre.get(), 'contra':contra.get()}
+                data.students[str(ID.get())] = {'name': nombre.get(), 'contra':contra.get()}
                 data.save_data('students')
             else: print("No")
         tk.Label(self, text='ID:').pack()
@@ -63,12 +63,10 @@ class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
         contra.pack()
 
         tk.Button(self, text='Añadir algo a estudiantes', command=lambda:add_st_test()).pack(pady=20)
-        tk.Button(self, text='Probar base de datos', command=lambda:print(data.dict_students)).pack(pady=20)
+        tk.Button(self, text='Probar base de datos', command=lambda:print(data.students)).pack(pady=20)
 
         tk.Button(self,text='Regresar', command= lambda: close_menu()).pack()
 
-
-
-login = Login(root) #Solo vamos a reutilizar el login, por eso se coloca como atributo del root
+login = Login(root)
 root.mainloop()
 
