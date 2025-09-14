@@ -3,7 +3,7 @@ import tkinter as tk
 from menus.graphic_tools import Window, PagePrincipal, Page
 from data.data_base import data
 #from clases_internas.usuarios import Student
-import clases_internas.usuarios
+
 
 #EN EL MAIN SIEMPRE HACER ESTOS DOS
 root = Window('Ventana', (1920, 500))
@@ -44,11 +44,13 @@ class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
         #para volver al login (la unica que va a perdurar) se cambia a lo que guardo la root(aquí master) en login_page
 
         def add_st_test():
+            pass
+            """
             st = clases_internas.usuarios.Student( nombre.get(), contra.get())
             print(st.user_id)
             data.students[str(st.user_id)] = {'name': nombre.get(), 'contra':contra.get()}
             data.save_data('students')
-
+            """
 
         tk.Label(self, text='Nombre:').pack()
         nombre = tk.Entry(self)
@@ -65,4 +67,5 @@ class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
 
 login = Login(root)
 root.mainloop()
+
 
