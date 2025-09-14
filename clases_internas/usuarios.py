@@ -1,42 +1,70 @@
 import random
 from data.data_base import data
+from cursos import Courses
 
 
 class User:
     def __init__(self, name,  password):
-        self.__user_id = self._create_code()
-        self.__name = name
-        self.__password = password
+        self._user_id = self._create_code()
+        self._name = name
+        self._password = password
         self.__courses = {}
 
     @property
     def user_id(self):
-        return self.__user_id
+        return self._user_id
 
     @property
     def password(self):
-        return self.__password
+        return self._password
 
     def _create_code(self):
         pass
 
     def mostrar_info(self):
-        return f"ID de usuario: {self.__user_id} \n Cursos: {self.__courses}"
+        return f"ID de usuario: {self._user_id} \n Cursos: {self.__courses}"
 
 class Instructor(User):
-    def __init__(self, name, password, students):
+    def __init__(self, name, password):
         super().__init__( name, password)
-        self._students = students
+        self.__courses = {}
+        self.create_instructor(name, password)
 
-    def create_course(self):
-        name = input("Ingrese el nombre del curso: ")
-        return f"El nombre del curso es {name}, el codigo es {"Poner id despues"}"
+    def create_instructor(self, entry_name, entry_password):
+        if entry_name.strip() == "" or entry_password.strip() == "":
+            if entry_name.strip() == "" and entry_password.strip() == "":
+                return -3
+            elif entry_name.strip() == "":
+                return -1
+            elif entry_password.strip() == "":
+                return -2
+            else:
+                return -4
+        else:
+            data.instructors[self.user_id] = {
+                "name": self._name,
+                "password": self._password
+            }
+            data.save_data("instructors")
+            return 0
+
+    def create_course(self, entry_name:str):
+        if entry_name.strip() != "":
+            course = Courses(entry_name, self)
+            data.courses[course.course_id] = {
+                "corse_name": course.course_name,
+                "course_id": course.course_id,
+                "teacher": data.instructors[self.user_id]
+            }
+            data.save_data("courses")
+
 
     def _create_code(self):
         final_code = ""
         while len(final_code) == 0:
-            code = "IST"+"".join(str(random.randint(0, 9)) for _ in range(4))
-            final_code = code
+            code = "IST"+"".join(str(random.randint(0, 9)) for _ in range(5))
+            if code not in data.instructors:
+                final_code = code
         return final_code
 
 
@@ -44,6 +72,25 @@ class Student(User):
     def __init__(self, name, password):
         super().__init__( name, password)
         self.__courses = {}
+        self.create_student(name, password)
+
+    def create_student(self, entry_name:str, entry_password:str):
+        if entry_name.strip() == "" or entry_password.strip() == "":
+            if entry_name.strip() == "" and entry_password.strip() == "":
+                return -3
+            elif entry_name.strip() == "":
+                return -1
+            elif entry_password.strip() == "":
+                return -2
+            else:
+                return -4
+        else:
+            data.students[self.user_id] = {
+                "name": self._name,
+                "password": self._password
+            }
+            data.save_data("students")
+            return 0
 
     def _create_code(self):
         final_code = ""
@@ -52,3 +99,10 @@ class Student(User):
             if code not in data.students:
                 final_code = code
         return final_code
+
+
+tea1 = Instructor("Tilin ", "123")
+tea1.create_course("skibidi")
+student1 = Student("Rodrigo", "1234")
+print(student1.user_id)
+print(data.students)
