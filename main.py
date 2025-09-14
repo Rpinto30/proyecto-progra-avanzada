@@ -96,9 +96,18 @@ class CreateCourse(Page):
         def c_curso():
             teacher.create_course(self.nombre.get())
 
-        tk.Button(self, text='Crear curso', command=lambda: c_curso()).pack()
+        def create_tarea():
+            self.change_page(CrearTarea(self.master, self))
+
+        tk.Button(self, text='Crear curso', command=lambda: c_curso()).pack(pady=25)
+        tk.Button(self, text='Subir nota', command=lambda: create_tarea()).pack(pady=25)
         tk.Button(self, text='regresar', command=lambda:self.change_page(father)).pack() #volver al anterior
 
+
+class CrearTarea(Page):
+    def __init__(self, master, parent, **kwargs):
+        super().__init__(master=master, bg='#B1945E', **kwargs)
+        tk.Button(self, text='regresar', command=lambda:self.change_page(parent)).pack()
 
 #CREACION DE MENÚS (Instancias)
 login = Login(root)
