@@ -39,7 +39,7 @@ class Courses:
         return final_code
 
 
-
+"""
 stu = Student("Est123","Rodrigo", "234", "Hola@gmail.com")
 stu2 = Student("Est345", "Are", "123", "roro")
 stu3 = Student("Est444","Masha", "555", "Tortilla")
@@ -51,7 +51,7 @@ cour2 = Courses("Lenguaje",tea2 )
 cour3 = Courses("Magis", tea3)
 curs = {cour.course_id: cour, cour2.course_id: cour2, cour3.course_id: cour3 }
 print(curs[cour.course_id].teacher)
-
+"""
 
 
 
