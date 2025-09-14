@@ -20,7 +20,6 @@ class DataBase:
     @property
     def courses(self): return self.__courses
 
-
     #Reutilizando parte de la lógica del parcial
     #https://github.com/Rpinto30/Parcial-Progra-avanzada/blob/main/save_data.py
     def save_data(self, name_file:str):
