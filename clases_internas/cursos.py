@@ -1,11 +1,10 @@
 # Clase cursos
 import random
-from usuarios import Instructor, Student
-from main import data
+
 
 class Courses:
     def __init__(self, course_name, teacher):
-        self.__course_id = self.__create_code({})
+        self.__course_id = self.__create_code()
         self._course_name = course_name
         self.__teacher = teacher
         self.__student = {}
@@ -31,7 +30,7 @@ class Courses:
     def material(self):
         return self.__material
 
-    def __create_code(self, courses):
+    def __create_code(self):
         final_code = ""
         while len(final_code) == 0:
             code = "SUB"+"".join(str(random.randint(0, 9)) for _ in range(4))
@@ -39,7 +38,7 @@ class Courses:
         return final_code
 
 
-
+"""
 stu = Student("Est123","Rodrigo", "234", "Hola@gmail.com")
 stu2 = Student("Est345", "Are", "123", "roro")
 stu3 = Student("Est444","Masha", "555", "Tortilla")
@@ -51,7 +50,7 @@ cour2 = Courses("Lenguaje",tea2 )
 cour3 = Courses("Magis", tea3)
 curs = {cour.course_id: cour, cour2.course_id: cour2, cour3.course_id: cour3 }
 print(curs[cour.course_id].teacher)
-
+"""
 
 
 
