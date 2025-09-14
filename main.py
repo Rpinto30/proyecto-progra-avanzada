@@ -62,7 +62,6 @@ class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
                                                   teacher=Instructor(data.instructors[str(nombre.get())]['name'], contra.get(), str(nombre.get())),
                                                   father=self))
             else: self.inf.config(text='No se pudo iniciar sesión, codigo no encontrado')
-
         tk.Label(self, text='Nombre o código:').pack()
         nombre = tk.Entry(self)
         nombre.pack()
