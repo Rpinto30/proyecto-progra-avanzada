@@ -1,54 +1,72 @@
 import tkinter as tk
-from graphic_tools import Window, PagePrincipal, Page, ScrollFrame, Tabla
 
+from menus.graphic_tools import Window, PagePrincipal, Page
+from data.data_base import DataBase
+from clases_internas.usuarios import Student
+
+#EN EL MAIN SIEMPRE HACER ESTOS DOS
+data = DataBase()
 root = Window('Ventana', (1920, 500))
-f = PagePrincipal(root, bg='#E8CFB0')
-f2 = Page(root, bg='#CEF5EB')
-b = tk.Button(f, text='saluda', command=lambda: f.change_page(f2), cursor='fleur')
-b.pack(padx=50, pady=10, side='bottom')
-frame = tk.Frame(f2, bg='#BC9FCF')
-frame.pack()
-tabla = ScrollFrame(f2, width=500, height=300, bg='#7DCC4E', hbar_position='bottom', vbar_position='left')
-tabla.pack()
+#CLASE LOGIN EJEMPLO
+class Login(PagePrincipal):
+    def __init__(self, master, **kwargs):
+        super().__init__(master=master,bg='red', **kwargs)
+        #AQUÍ IRIA LOS BOTONES, FRAMES, TEXTOS DEL LOGIN (los botones de abajo son un ejemplo nada más)
+        b = tk.Button(self, text='Sacar toplevel', command=lambda:self.__crear_usuario()) #<- BOTÓN EJEMPLO
+        b.pack(pady=50) #<- BOTÓN EJEMPLO
+        tk.Label(self, text='De quién es el siguiente menú?').pack() #Lo hago directo porque luego no lo uso
+        e = tk.Entry(self) #Como si este fuese el de Entry de código en la interfaz
+        e.pack()
+        #FUNCIÓN PARA CAMBIAR AL X MENÚ, en vez de instanciar meú de prueba, instanciar el menú que se desea
+        def cambiar_a_prueba():
+            m = MenuPrueba(master=self.master, bg='green', who=str(e.get())) #ISNTANCIA DEL MENÚ QUE SE DESEE
+            self.change_page(m) #SE CAMBIA DE PAGINA (OBLIGATORIO)
 
-for i in range(12):
-    l2 = tk.Label(tabla.scr_frame, text='HOLA')
-    tabla.pack_on_scroll(l2, side='left')
+        b_cambio = tk.Button(self, text='Cambiar página', command=lambda:cambiar_a_prueba()) #<- BOTÓN EJEMPLO
+        b_cambio.pack()#<- BOTÓN EJEMPLO
 
-def texto_prueba(texto):
-    global  text_v, l_f3
-    text_v = "Hola "+ str(texto)
-    l_f3.config(text=text_v)
-    f2.change_page(f3)
+    #ESTE ES UN EJEMPLO PARA UN TOPLEVEL
+    def __crear_usuario(self):
+        top_level = tk.Toplevel(self.master)
+        top_level.pack_propagate(False) #PARA EVITAR QUE SE DEFORME AL HACER UN PACK
+        txt = tk.Label(top_level, text='Holaaaaaaaaa')
+        txt.pack()
 
-text_v = tk.StringVar()
-for i in range(20):
-    b2 = tk.Button(tabla.scr_frame, text=f'saluda {i}', command=lambda: texto_prueba(i))
-    tabla.pack_on_scroll(b2)
+#Los menus van a ser dinamicos, crean y destruyen conforme el programa los necesite
+class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
+    def __init__(self, master:Window, who, **kwargs): #Digamos que "who" es un string de quíen es el menú
+        super().__init__(master=master, **kwargs)
+        #COLOCAR LO VISUAL DE ESTE MENÚ:
+        l = tk.Label(self, text=f'Hola {who}!')
+        l.pack()
+        def close_menu():
+            self.change_page(master.principal_page)
+        #para volver al login (la unica que va a perdurar) se cambia a lo que guardo la root(aquí master) en login_page
 
-b = tk.Button(frame, text='volver', command=lambda: f2.change_page(f))
-b.pack(padx=50, pady=10, side='right')
+        def add_st_test():
+            if ID.get() not in data.students:
+                st = Student(ID.get(), nombre.get(),contra.get(), '')
+                print(st.user_id)
+                data.students[str(ID.get())] = {'name': nombre.get(), 'contra':contra.get()}
+                data.save_data('students')
+            else: print("No")
+        tk.Label(self, text='ID:').pack()
+        ID = tk.Entry(self)
+        ID.pack()
 
-f3 = Page(root, bg='#FFE46E')
+        tk.Label(self, text='Nombre:').pack()
+        nombre = tk.Entry(self)
+        nombre.pack()
 
-l_f3 = tk.Label(f3, text='Hola')
-l_f3.pack()
+        tk.Label(self, text='Contraseña:').pack(pady=10)
+        contra = tk.Entry(self)
+        contra.pack()
 
-scframe_f3 = ScrollFrame(f3, 'left', 'bottom', width=200, height=1080, bg='#4B6AFF')
-scframe_f3.pack(side="right")
+        tk.Button(self, text='Añadir algo a estudiantes', command=lambda:add_st_test()).pack(pady=20)
+        tk.Button(self, text='Probar base de datos', command=lambda:print(data.students)).pack(pady=20)
 
-l_a = tk.Label(scframe_f3.scr_frame, text='Hola')
-scframe_f3.pack_on_scroll(l_a)
+        tk.Button(self,text='Regresar', command= lambda: close_menu()).pack()
 
-b_f3 = tk.Button(f3, text='Volver al menú principal', command=lambda:f3.change_page(f))
-b_f3.pack()
-
-a = [[' ','Hola', 'adios', 'aa'],
-     ['2','Hola', 'aaaa', 'pancjo'],
-     ['1', 'adios', 'zxczxc'],
-     ['4','Adios', 'adios'],]
-
-l = Tabla(master=f, matrix=a, vbar_position='left', hbar_position='bottom', borderwidth=2)
-l.pack(side='left')
-
+login = Login(root)
 root.mainloop()
+

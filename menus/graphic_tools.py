@@ -58,6 +58,8 @@ class Window(tk.Tk):
     @property
     def current_frame(self): return self.__current_frame
 
+    @property
+    def principal_page(self): return self.__principal_page
 
 class Page(tk.Frame):
     # **kwargs para heredar todos los argumentos de tk.Frame
@@ -82,7 +84,7 @@ class Page(tk.Frame):
     def clear_widgest(self, widgets: list[tk.Widget]):
         self.clear_widgest.extend(widgets)
 
-    def _clear_widgets_in_frame(self):
+    def clear_widgets_in_frame(self):
         for widget in self._clear_widgest:
             if isinstance(widget, tk.Label): widget.config(text=' ')
             elif isinstance(widget, tk.Entry): widget.delete(0, tk.END)
@@ -96,9 +98,19 @@ class Page(tk.Frame):
         :param page: El frame al que se quiere transportar
         """
         if self.master.current_frame == self:
-            if self._clear_widgest: self._clear_widgets_in_frame()
+            if self._clear_widgest: self.clear_widgets_in_frame()
             self.master.change_frame(page)
         else: raise SyntaxError("Estas realizando un cambio de página desde un frame que no es el actual")
+
+    def return_main(self):
+        if self.master.current_frame == self:
+            if self._clear_widgest: self.clear_widgets_in_frame()
+            self.master.change_frame(self.master.principal_page)
+        else:
+            raise SyntaxError("Estas realizando un cambio de página desde un frame que no es el actual")
+
+    def close_menu(self):
+        pass
 
 class PagePrincipal(Page):
     def __init__(self, master, **kwargs):
@@ -145,22 +157,50 @@ class Tabla(ScrollFrame):
                  font_size = 12, propagate_width:int=0, propagate_height:int=0,
                  borderwidth:int= 1,
                  color_header:str='#A9B1D1', color_first_colum:str='',
+                 color_first:str='', color_table:str='',
                  **kwargs):
+        """
+        Crea una tabla con información que se le pase, necesita una matriz
+        [['VALOR1','VALOR2'],['VALOR3','VALOR4']], en caso faltar un item se llena la celda estando vacía.
+
+        Por defecto la tabla se adapta al tamaño de columnas y filas, pero con propagate_width y
+        propagate_height se puede configurar hasta cuantas filas o columnas se desea que aparezcan
+        cuando la tabla se genera.
+
+        :param master: En donde se coloca la tabla
+        :param matrix: La matriz que muestra la tabla
+        :param vbar_position: Opcional, si se desea tener una barra vertical
+        :param hbar_position: Opciona, si se desea tener una barra horizontal
+        :param cell_width: El largo de las celdas, la cantidad de caracteres
+        :param cell_height: El alto de las celdas
+        :param font_size: El tamaño de la fuente que se coloca en todas las celdas
+        :param propagate_width: Opcional, la cantidad de columnas que entran en la tabla (recomendación: usar con hbar_position)
+        :param propagate_height:Opcional, la cantidad de filas que entran en la tabla (recomendación: usar con vbar_position)
+        :param borderwidth: Opcional, el tamaño del borde de la tabla
+        :param color_header: Opcional, el color del encabezado de la tabla
+        :param color_first_colum: Opcional, el color de la primera columna de la tabla
+        :param color_first: Opcional, el color de la primera celda de la tabla
+        :param color_table: Opcional, el color general de la tabla
+        :param kwargs:
+        """
         super().__init__(master, vbar_position, hbar_position,**kwargs)
+        self.__rows =len(matrix)
+        self.__colums=len(matrix[0])
         self.__table = tk.Frame(self.scr_frame, bg='#58FFB2')
-        for i in range(len(matrix)): #ROWS
+        for i in range(self.__rows): #ROWS
             row = []
             self.__table.grid_rowconfigure(i, weight=1)
-            for j in range(len(matrix[0])): #COLUMS
+            for j in range(self.__colums): #COLUMS
                 try:
                     e = tk.Label(self.__table, fg='black', font=("Arial", font_size), text=matrix[i][j], relief='solid', borderwidth=borderwidth)
                 except IndexError: e = tk.Label(self.__table, fg='black', font=("Arial", font_size), text=" ", relief='solid', borderwidth=borderwidth)
                 e.config(width=cell_width, height=cell_height)
+                if color_table != '': e.config(bg=color_table)
                 #---------------------COLOR DE COLUMNAS---------------------------
-                if i == 0:
-                    e.config(bg='#A9B1D1')
-                else:
-                    pass#e.config(readonlybackground='#D5D9E8')
+                if i == 0 and j%self.__colums==0 and color_first != '': e.config(bg=color_first)
+                elif i == 0 and color_header != '': e.config(bg=color_header)
+                elif j%self.__colums==0 and color_first_colum != '': e.config(bg=color_first_colum)
+
                 e.grid(row=i, column=j)
                 row.append(e)
         if propagate_height <= 0 or propagate_width == 0: self.master.update_idletasks()  # Actualiza tkinter para la lectura de la geometria
@@ -179,4 +219,30 @@ class Tabla(ScrollFrame):
 
         self.pack_on_scroll(self.__table)
 
+    def pack_table(self, **kwargs):
+        self.pack(**kwargs)
 
+    def confi_row(self, index=0, height_=1):
+        """
+        Ajusta el tamaño de toda una columna
+        :param index: El index de la columna que se desea modificar, por defecto 0
+        :param height_: El tamaño que se desea que tenga la calumna seleccionada
+        """
+        for n_row, row in enumerate(self.__table.winfo_children(),0):
+            if  n_row//self.__colums <= index:
+                row.config(height=height_)
+
+    def confi_colum(self, index=0, width_=1):
+        """
+        Ajusta el tamaño de toda una columna
+        :param index: El index de la columna que se desea modificar, por defecto 0
+        :param width_: El tamaño que se desea que tenga la calumna seleccionada
+        """
+        for n_row, row in enumerate(self.__table.winfo_children(),0):
+            if index == n_row%self.__colums:
+                row.config(width=width_)
+
+
+class ProccesFile(tk.Frame):
+    def __init__(self, master:Window, **kwargs):
+        super().__init__(master=master, **kwargs)

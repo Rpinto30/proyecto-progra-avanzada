@@ -1,6 +1,3 @@
-#  Clase usuario
-from cursos import Courses
-
 
 class User:
     def __init__(self, user_id, name,  password, mail):
