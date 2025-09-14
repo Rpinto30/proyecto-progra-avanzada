@@ -30,9 +30,9 @@ class Instructor(User):
     def __init__(self, name, password, user_id=''):
         super().__init__(name, password, user_id)
         self.__courses = {}
-        self.create_instructor(name, password)
+        self.__create_instructor(name, password)
 
-    def create_instructor(self, entry_name, entry_password):
+    def __create_instructor(self, entry_name, entry_password):
         if entry_name.strip() == "" or entry_password.strip() == "":
             if entry_name.strip() == "" and entry_password.strip() == "":
                 return -3
@@ -55,7 +55,9 @@ class Instructor(User):
             course = Courses(entry_name, self)
             data.courses[course.course_id] = {
                 "corse_name": course.course_name,
-                "teacher": data.instructors[self.user_id]
+                "teacher": data.instructors[self.user_id],
+                "students": {},
+                "material": {}
             }
             data.save_data("courses")
 
@@ -108,3 +110,14 @@ class Student(User):
                 repeat_times += 1
                 if repeat_times > 10 **digits: digits+=1
         return final_code
+
+    def course_register(self, course_id):
+        if course_id not in data.courses:
+            return False
+        else:
+            data.courses[course_id]['students'][self.user_id] = {
+                "name": self._name,
+                "password": self._password
+            }
+            return True
+
