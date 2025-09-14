@@ -1,6 +1,6 @@
 # Clase cursos
 import random
-
+from data.data_base import data
 
 class Courses:
     def __init__(self, course_name, teacher):
@@ -32,25 +32,17 @@ class Courses:
 
     def __create_code(self):
         final_code = ""
+        repeat_times = 0
+        digits = 4
         while len(final_code) == 0:
-            code = "SUB"+"".join(str(random.randint(0, 9)) for _ in range(4))
-            final_code = code
+            code = "SUB" + "".join(str(random.randint(0, 9)) for _ in range(digits))
+            if code not in data.courses:
+                final_code = code
+            else:
+                repeat_times += 1
+                if repeat_times > 10 ** digits: digits += 1
         return final_code
 
-
-"""
-stu = Student("Est123","Rodrigo", "234", "Hola@gmail.com")
-stu2 = Student("Est345", "Are", "123", "roro")
-stu3 = Student("Est444","Masha", "555", "Tortilla")
-tea = Teacher("Cat122", "Cabra", "223", "Docente", {})
-tea2 = Teacher("Cat123","Tello",  "67", "Inges", {})
-tea3 = Teacher("Cat124","cocacola", "1111", "pepe", {})
-cour = Courses( "tonchan", tea)
-cour2 = Courses("Lenguaje",tea2 )
-cour3 = Courses("Magis", tea3)
-curs = {cour.course_id: cour, cour2.course_id: cour2, cour3.course_id: cour3 }
-print(curs[cour.course_id].teacher)
-"""
 
 
 

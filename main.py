@@ -1,8 +1,8 @@
 import tkinter as tk
 
+from clases_internas.usuarios import Instructor
 from menus.graphic_tools import Window, PagePrincipal, Page
 from data.data_base import data
-#from clases_internas.usuarios import Student
 
 
 #EN EL MAIN SIEMPRE HACER ESTOS DOS
@@ -44,7 +44,7 @@ class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
         #para volver al login (la unica que va a perdurar) se cambia a lo que guardo la root(aquí master) en login_page
 
         def add_st_test():
-            pass
+            i = Instructor(nombre.get(), contra.get())
             """
             st = clases_internas.usuarios.Student( nombre.get(), contra.get())
             print(st.user_id)

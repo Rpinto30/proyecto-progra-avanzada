@@ -8,9 +8,24 @@ class DataBase:
         self.__instructors = {}
         self.__courses = {}
 
-        self.__students = self.load_data('students')
-        self.__instructors = self.load_data('instructors')
-        self.__courses = self.load_data('courses')
+        #STUDENTS
+        for _ in ['sudents', 'instructos', 'courses']: pass
+        try:
+            self.__students = self.load_data('students')
+        except json.decoder.JSONDecodeError: #Cuando se borran las llaves del json agregarlas
+            with open(os.path.join(self.__data_base_path, f"students.json"), mode="w", encoding="utf-8") as write_file:
+                json.dump({}, write_file)
+        #INSTRUCTORS
+        try:
+            self.__instructors = self.load_data('instructors')
+        except json.decoder.JSONDecodeError:  # Cuando se borran las llaves del json agregarlas
+            with open(os.path.join(self.__data_base_path, f"instructors.json"), mode="w", encoding="utf-8") as write_file:
+                json.dump({}, write_file)
+        try:
+            self.__courses = self.load_data('courses')
+        except json.decoder.JSONDecodeError: #Cuando se borran las llaves del json agregarlas
+            with open(os.path.join(self.__data_base_path, f"courses.json"), mode="w", encoding="utf-8") as write_file:
+                json.dump({}, write_file)
 
     @property
     def students(self): return self.__students
@@ -22,8 +37,6 @@ class DataBase:
     def instructors(self, ist): self.__instructors = ist
     @property
     def courses(self): return self.__courses
-
-
 
     #Reutilizando parte de la lógica del parcial
     #https://github.com/Rpinto30/Parcial-Progra-avanzada/blob/main/save_data.py

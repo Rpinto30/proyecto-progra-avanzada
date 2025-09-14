@@ -1,7 +1,7 @@
 import random
 from data.data_base import data
-from cursos import Courses
-
+from .cursos import Courses #IMPORT RELATIVO (Por eso el __init en la carpeta, para especificar que esta carpeta es un paquete)
+#https://realpython-com.translate.goog/absolute-vs-relative-python-imports/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc
 
 class User:
     def __init__(self, name,  password):
@@ -61,10 +61,14 @@ class Instructor(User):
 
     def _create_code(self):
         final_code = ""
+        repeat_times = 0
+        digits = 4
         while len(final_code) == 0:
-            code = "IST"+"".join(str(random.randint(0, 9)) for _ in range(5))
-            if code not in data.instructors:
-                final_code = code
+            code = "IST" + "".join(str(random.randint(0, 9)) for _ in range(digits))
+            if code not in data.instructors:final_code = code
+            else:
+                repeat_times += 1
+                if repeat_times > 10 ** digits: digits += 1
         return final_code
 
 
@@ -94,15 +98,18 @@ class Student(User):
 
     def _create_code(self):
         final_code = ""
+        repeat_times = 0
+        digits = 4
         while len(final_code) == 0:
-            code = "STU"+"".join(str(random.randint(0, 9)) for _ in range(5))
-            if code not in data.students:
-                final_code = code
+            code = "STU" + "".join(str(random.randint(0, 9)) for _ in range(digits))
+            if code not in data.students:final_code = code
+            else:
+                repeat_times += 1
+                if repeat_times > 10 **digits: digits+=1
         return final_code
 
 
 tea1 = Instructor("Tilin ", "123")
-tea1.create_course("skibidi")
-student1 = Student("Rodrigo", "1234")
-print(student1.user_id)
-print(data.students)
+#tea1.create_course("skibidi")
+#student1 = Student("Rodrigo", "1234")
+print([_ for _ in data.students])
