@@ -42,3 +42,4 @@ class DataBase:
             self.save_data(name_file)
             return {}
 
+data = DataBase()

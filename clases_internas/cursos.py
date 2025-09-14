@@ -1,6 +1,7 @@
 # Clase cursos
 import random
-from usuarios import Teacher, Student
+from usuarios import Instructor, Student
+from main import data
 
 class Courses:
     def __init__(self, course_name, teacher):

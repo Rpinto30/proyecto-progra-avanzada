@@ -1,11 +1,12 @@
+import random
+from data.data_base import data
+
 
 class User:
-    def __init__(self, user_id, name,  password, mail):
-        self.__user_id = user_id
+    def __init__(self, name,  password):
+        self.__user_id = self._create_code()
         self.__name = name
         self.__password = password
-        self._mail = mail
-        self.__mail = mail
         self.__courses = {}
 
     @property
@@ -16,30 +17,38 @@ class User:
     def password(self):
         return self.__password
 
-    @property
-    def correo(self):
-        return self._mail
-
-    @property
-    def cursos(self):
-        return self.__mail
+    def _create_code(self):
+        pass
 
     def mostrar_info(self):
-        return f"ID de usuario: {self.__user_id} \n Correo: {self._mail} \n Cursos: {self.__courses}"
+        return f"ID de usuario: {self.__user_id} \n Cursos: {self.__courses}"
 
-class Teacher(User):
-    def __init__(self, user_id, name, password, mail, students):
-        super().__init__(user_id, name, password, mail)
+class Instructor(User):
+    def __init__(self, name, password, students):
+        super().__init__( name, password)
         self._students = students
 
     def create_course(self):
         name = input("Ingrese el nombre del curso: ")
         return f"El nombre del curso es {name}, el codigo es {"Poner id despues"}"
 
+    def _create_code(self):
+        final_code = ""
+        while len(final_code) == 0:
+            code = "IST"+"".join(str(random.randint(0, 9)) for _ in range(4))
+            final_code = code
+        return final_code
 
 
 class Student(User):
-    def __init__(self, user_id, name, password, mail):
-        super().__init__(user_id, name, password, mail)
+    def __init__(self, name, password):
+        super().__init__( name, password)
+        self.__courses = {}
 
-
+    def _create_code(self):
+        final_code = ""
+        while len(final_code) == 0:
+            code = "STU"+"".join(str(random.randint(0, 9)) for _ in range(5))
+            if code not in data.students:
+                final_code = code
+        return final_code

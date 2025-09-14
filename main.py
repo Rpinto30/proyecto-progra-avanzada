@@ -1,11 +1,11 @@
 import tkinter as tk
 
 from menus.graphic_tools import Window, PagePrincipal, Page
-from data.data_base import DataBase
-from clases_internas.usuarios import Student
+from data.data_base import data
+#from clases_internas.usuarios import Student
+import clases_internas.usuarios
 
 #EN EL MAIN SIEMPRE HACER ESTOS DOS
-data = DataBase()
 root = Window('Ventana', (1920, 500))
 #CLASE LOGIN EJEMPLO
 class Login(PagePrincipal):
@@ -44,15 +44,11 @@ class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
         #para volver al login (la unica que va a perdurar) se cambia a lo que guardo la root(aquí master) en login_page
 
         def add_st_test():
-            if ID.get() not in data.students:
-                st = Student(ID.get(), nombre.get(),contra.get(), '')
-                print(st.user_id)
-                data.students[str(ID.get())] = {'name': nombre.get(), 'contra':contra.get()}
-                data.save_data('students')
-            else: print("No")
-        tk.Label(self, text='ID:').pack()
-        ID = tk.Entry(self)
-        ID.pack()
+            st = clases_internas.usuarios.Student( nombre.get(), contra.get())
+            print(st.user_id)
+            data.students[str(st.user_id)] = {'name': nombre.get(), 'contra':contra.get()}
+            data.save_data('students')
+
 
         tk.Label(self, text='Nombre:').pack()
         nombre = tk.Entry(self)
