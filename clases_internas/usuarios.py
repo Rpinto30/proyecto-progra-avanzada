@@ -119,10 +119,11 @@ class Student(User):
         if course_id not in data.courses:
             return False
         else:
-            data.courses[course_id]['students'].append(self.user_id)
-            data.students[self.user_id]['courses'].append(course_id)
-            data.save_data("courses")
-            data.save_data("students")
+            if self.user_id not in data.courses[course_id]['students']:
+                data.courses[course_id]['students'].append(self.user_id)
+                data.students[self.user_id]['courses'].append(course_id)
+                data.save_data("courses")
+                data.save_data("students")
             return True
 
 #tea1 = Instructor("Pepe", "123")
@@ -135,6 +136,6 @@ class Student(User):
 #student1.course_register("SUB7142")
 
 
-course1 = Courses("CursoPrueba", "IST3732", ["STU1198"], "", "SUB7142")
+#course1 = Courses("CursoPrueba", "IST3732", ["STU1198"], "", "SUB7142")
 #course1.assign_homework("Tarea1", "Tarea casa", "20")
-course1.qualification("STU1198", "HOM8", "4")
+#course1.qualification("STU1198", "HOM8", "4")

@@ -1,7 +1,7 @@
 # Clase cursos
 import random
 from data.data_base import data
-from material import Homework
+from clases_internas.material import Homework
 
 class Courses:
     def __init__(self, course_name, teacher, student = "", material = "", _id=''):

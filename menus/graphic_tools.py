@@ -157,7 +157,7 @@ class Tabla(ScrollFrame):
                  font_size = 12, propagate_width:int=0, propagate_height:int=0,
                  borderwidth:int= 1,
                  color_header:str='#A9B1D1', color_first_colum:str='',
-                 color_first:str='', color_table:str='',
+                 color_first:str='', color_table:str='', cell_command=None, select_mode=None,
                  **kwargs):
         """
         Crea una tabla con información que se le pase, necesita una matriz
@@ -184,40 +184,98 @@ class Tabla(ScrollFrame):
         :param kwargs:
         """
         super().__init__(master, vbar_position, hbar_position,**kwargs)
-        self.__rows =len(matrix)
-        self.__colums=len(matrix[0])
-        self.__table = tk.Frame(self.scr_frame, bg='#58FFB2')
-        for i in range(self.__rows): #ROWS
+        self.master = master
+        self.matrix = matrix
+        self.vbar_position = vbar_position
+        self.hbar_position = hbar_position
+        self.cell_width = cell_width
+        self.cell_height = cell_height
+        self.font_size = font_size
+        self.propagate_width = propagate_width
+        self.propagate_height = propagate_height
+        self.borderwidth = borderwidth
+        self.color_header = color_header
+        self.color_first_colum = color_first_colum
+        self.color_first = color_first
+        self.color_table = color_table
+
+        self.cell_command = cell_command
+        self.select_mode = select_mode
+        self.__create_table(self.matrix)
+
+    def __create_table(self, matrix):
+        self.__rows = len(matrix)
+        self.__colums = len(matrix[0])
+        self.__table = tk.Frame(self.scr_frame)
+        for i in range(self.__rows):  # Filas
             row = []
             self.__table.grid_rowconfigure(i, weight=1)
-            for j in range(self.__colums): #COLUMS
+            for j in range(self.__colums):  # Columnas
+                text_value = self.matrix[i][j] if j < len(self.matrix[i]) else " "
                 try:
-                    e = tk.Label(self.__table, fg='black', font=("Arial", font_size), text=matrix[i][j], relief='solid', borderwidth=borderwidth)
-                except IndexError: e = tk.Label(self.__table, fg='black', font=("Arial", font_size), text=" ", relief='solid', borderwidth=borderwidth)
-                e.config(width=cell_width, height=cell_height)
-                if color_table != '': e.config(bg=color_table)
-                #---------------------COLOR DE COLUMNAS---------------------------
-                if i == 0 and j%self.__colums==0 and color_first != '': e.config(bg=color_first)
-                elif i == 0 and color_header != '': e.config(bg=color_header)
-                elif j%self.__colums==0 and color_first_colum != '': e.config(bg=color_first_colum)
+                    e = tk.Label(
+                        self.__table,
+                        fg='black',
+                        font=("Arial", self.font_size),
+                        text=self.matrix[i][j],
+                        relief='solid',
+                        borderwidth=self.borderwidth
+                    )
+                except IndexError:
+                    e = tk.Label(
+                        self.__table,
+                        fg='black',
+                        font=("Arial", self.font_size),
+                        text=" ",
+                        relief='solid',
+                        borderwidth=self.borderwidth
+                    )
+
+                # Tamaño fijo de la celda
+                e.config(width=self.cell_width, height=self.cell_height)
+
+                # --- Colores ---
+                if self.color_table != '': e.config(bg=self.color_table)
+                if i == 0 and j % self.__colums == 0 and self.color_first != '':e.config(bg=self.color_first)
+                elif i == 0 and self.color_header != '':e.config(bg=self.color_header)
+                elif j % self.__colums == 0 and self.color_first_colum != '':e.config(bg=self.color_first_colum)
+
+                if self.cell_command:
+                    def handler(event, row=i, col=j):
+                        if self.select_mode == "row":
+                            value = self.matrix[row][0]  # primer elemento de la fila
+                        elif self.select_mode == "column":
+                            value = self.matrix[0][col]  # primer elemento de la columna
+                        else:
+                            value = self.matrix[row][col]  # valor normal
+                        self.cell_command(row, col, value)
+
+                    e.bind("<Button-1>", handler)
 
                 e.grid(row=i, column=j)
                 row.append(e)
-        if propagate_height <= 0 or propagate_width == 0: self.master.update_idletasks()  # Actualiza tkinter para la lectura de la geometria
-        if propagate_width <= 0:
-            self._canvas_scroll.config(
-                width=[a for a in self.__table.winfo_children()][0].winfo_width()*(len(matrix[0])))
+
+            # --- Ajuste dinámico del canvas ---
+        if self.propagate_height <= 0 or self.propagate_width == 0: self.master.update_idletasks()
+
+        if self.propagate_width <= 0:
+            self._canvas_scroll.config(width=[a for a in self.__table.winfo_children()][0].winfo_width() * len(self.matrix[0]))
         else:
-            self._canvas_scroll.config(
-                width=[a for a in self.__table.winfo_children()][0].winfo_width() * int(propagate_width))
-        if propagate_height <= 0:
-            self._canvas_scroll.config(
-                height=[a for a in self.__table.winfo_children()][0].winfo_reqheight()*(len(matrix)))
+            self._canvas_scroll.config(width=[a for a in self.__table.winfo_children()][0].winfo_width() * int(self.propagate_width))
+
+        if self.propagate_height <= 0:
+            self._canvas_scroll.config(height=[a for a in self.__table.winfo_children()][0].winfo_reqheight() * len(self.matrix))
         else:
-            self._canvas_scroll.config(
-                height=[a for a in self.__table.winfo_children()][0].winfo_reqheight() * int(propagate_height))
+            self._canvas_scroll.config(height=[a for a in self.__table.winfo_children()][0].winfo_reqheight() * int(self.propagate_height))
 
         self.pack_on_scroll(self.__table)
+
+    def __on_cell_click(self, row, col):
+        valor = self.matrix[row][col]
+        #print(f"Celda presionada: fila {row}, columna {col}, valor: {valor}")
+        self.click_row = row
+        self.click_colum = col
+
 
     def pack_table(self, **kwargs):
         self.pack(**kwargs)
@@ -241,6 +299,12 @@ class Tabla(ScrollFrame):
         for n_row, row in enumerate(self.__table.winfo_children(),0):
             if index == n_row%self.__colums:
                 row.config(width=width_)
+
+
+    def reload(self, matrix):
+        self.matrix = matrix
+        self.__table.destroy()
+        self.__create_table(self.matrix)
 
 
 class ProccesFile(tk.Frame):
