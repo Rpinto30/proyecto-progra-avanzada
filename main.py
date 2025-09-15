@@ -64,8 +64,6 @@ class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
                 i.create_instructor(nombre.get(), contra.get())
                 self.inf.config(text=f'Se agregó {nombre.get()}, su codigo es {i.user_id}')
 
-            #self.change_page(CreateCourse(self.master, teacher=i))
-
         def iniciar_sesion():
             if str(nombre.get())[:3] == 'IST':
                 #En este ejemplo nombre.get() sustituye a lo que seria un code.get()
@@ -124,6 +122,7 @@ class CoursesStudent(Page):
                 teacher = data.courses[str(c.get())]['teacher']
                 self.inf.config(text=f"Se asigno al curso {data.courses[str(c.get())]} impartido por {data.instructors[teacher]['name']}")
             else: self.inf.config(text='Lo siento, no ecnontramos ningun curso')
+            self.t.reload(self.check_student_courses())
             self.t.reload(self.check_student_courses())
 
         tk.Button(self, text='Asignarse a curso', command=lambda: asig_course()).pack(pady=20)
