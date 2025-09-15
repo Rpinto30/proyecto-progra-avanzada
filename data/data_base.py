@@ -27,9 +27,13 @@ class DataBase:
                 json.dump({}, write_file)
 
     @property
-    def students(self): return self.__students
+    def students(self):
+        self.__students = self.load_data('students')
+        return self.__students
     @students.setter
-    def students(self, st): self.__students = st
+    def students(self, st):
+        self.__students = st
+        self.save_data('students')
     @property
     def instructors(self): return self.__instructors
     @instructors.setter
@@ -58,5 +62,6 @@ class DataBase:
             with open(path_data, mode="w", encoding="utf-8") as read_file:
                 json.dump({}, read_file)
             return {}
+
 
 data = DataBase()

@@ -64,7 +64,7 @@ class Window(tk.Tk):
 class Page(tk.Frame):
     # **kwargs para heredar todos los argumentos de tk.Frame
     # https://www.geeksforgeeks.org/python/packing-and-unpacking-arguments-in-python
-    def __init__(self, master:Window, **kwargs):
+    def __init__(self, master:Window | tk.Misc, **kwargs):
         """
         Crea una página, las páginas son frames que permiten organizar en secciones
         widgets para un uso específico. Se adaptan al tamaño de la pantalla y por medio
@@ -113,7 +113,7 @@ class Page(tk.Frame):
         pass
 
 class PagePrincipal(Page):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master: Window | tk.Misc, **kwargs):
         super().__init__(master=master, **kwargs)
         master.set_principal_page(self)
 
@@ -305,8 +305,3 @@ class Tabla(ScrollFrame):
         self.matrix = matrix
         self.__table.destroy()
         self.__create_table(self.matrix)
-
-
-class ProccesFile(tk.Frame):
-    def __init__(self, master:Window, **kwargs):
-        super().__init__(master=master, **kwargs)

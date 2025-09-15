@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 
 from clases_internas.usuarios import Instructor, Student
 from clases_internas.cursos import Courses
@@ -8,7 +7,7 @@ from data.data_base import data
 
 
 #EN EL MAIN SIEMPRE HACER ESTOS DOS
-root = Window('Ventana', (1920, 500))
+root = Window('Ventana', (1500, 500))
 #CLASE LOGIN EJEMPLO
 class Login(PagePrincipal):
     def __init__(self, master, **kwargs):
@@ -22,7 +21,7 @@ class Login(PagePrincipal):
         e.pack()
         #FUNCIÓN PARA CAMBIAR AL X MENÚ, en vez de instanciar meú de prueba, instanciar el menú que se desea
         def cambiar_a_prueba():
-            self.m_prubea = MenuPrueba(self.master)
+            self.m_prubea = MenuPrueba(master=self.master)
             self.m_prubea.set_who(e.get())
             self.change_page(self.m_prubea)
             #self.change_page(MenuPrueba(master=self.master, bg='green', who=str(e.get()))) #SE CAMBIA DE PAGINA (OBLIGATORIO)
@@ -41,7 +40,7 @@ class Login(PagePrincipal):
         txt.pack()
 
 class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
-    def __init__(self, master:Window, **kwargs): #Digamos que "who" es un string de quíen es el menú
+    def __init__(self, master, **kwargs): #Digamos que "who" es un string de quíen es el menú
         super().__init__(master=master, bg='green', **kwargs)
         self.who = ''
         #COLOCAR LO VISUAL DE ESTE MENÚ:
@@ -111,6 +110,9 @@ class MenuPrueba(Page): #CLASE DE MENÚ DE PRUEBA
 class CoursesStudent(Page):
     def __init__(self, master, student:Student, father, **kwargs):
         super().__init__(master=master, bg='#43701B', **kwargs)
+        self.student = student
+        self.father = father
+
         tk.Label(self, text=f"Bienvenido {student.name}").pack(pady=20)
         tk.Label(self, text='Ingresa el código de un curos').pack()
         c = tk.Entry(self)
@@ -122,35 +124,46 @@ class CoursesStudent(Page):
                 teacher = data.courses[str(c.get())]['teacher']
                 self.inf.config(text=f"Se asigno al curso {data.courses[str(c.get())]} impartido por {data.instructors[teacher]['name']}")
             else: self.inf.config(text='Lo siento, no ecnontramos ningun curso')
-            t.reload(check_student_courses())
+            self.t.reload(self.check_student_courses())
 
         tk.Button(self, text='Asignarse a curso', command=lambda: asig_course()).pack(pady=20)
 
-        def check_student_courses():
-            c = [['Codigo Curso', 'Curso', 'Tarea']]
-            homework_id = data.students[student.user_id]['material']
-            for id_ in homework_id:
-                cur_id = data.students[student.user_id]['material'][id_]["course"]
-                n_cur = data.courses[cur_id]['course_name']
-                title = data.students[student.user_id]['material'][id_]["tittle"]
-                c.append([id_, n_cur, title])
-            return c
-
         def ver_tareas(row, colum, value):
             if row>0:
-                self.change_page(DoHomework(self.master, student, self))
+                self.change_page(DoHomework(self.master, student, self, value))
         tk.Label(self, text='TAREAS:').pack(pady=10)
-        t = Tabla(self, check_student_courses(), vbar_position='left', propagate_height=5, cell_command=ver_tareas,
+        self.t = Tabla(self, self.check_student_courses(), vbar_position='left', propagate_height=5, cell_command=ver_tareas,
                   select_mode='row')
-        t.pack()
+        self.t.pack()
 
         tk.Button(self, text='regresar', command=lambda: self.change_page(father)).pack()  # volver al anterior
         self.inf = tk.Label(self, text='')
         self.inf.pack()
 
+    def check_student_courses(self):
+        c = [['Codigo Curso', 'Curso', 'Tarea']]
+        homework_id = data.students[self.student.user_id]['material']
+        for id_ in homework_id:
+            print(data.students[self.student.user_id]['material'][id_]['homework'])
+            if data.students[self.student.user_id]['material'][id_]['homework'] == '':
+                cur_id = data.students[self.student.user_id]['material'][id_]["course"]
+                n_cur = data.courses[cur_id]['course_name']
+                title = data.students[self.student.user_id]['material'][id_]["tittle"]
+                c.append([id_, n_cur, title])
+        return c
+
 class DoHomework(Page):
-    def __init__(self, master, student: Student, father, **kwargs):
+    def __init__(self, master, student: Student, father, id_homework, **kwargs):
         super().__init__(master=master, bg='#43701B', **kwargs)
+
+        self.e = tk.Text(self, width=50, height=10)
+        self.e.pack()
+
+        def send():
+            student.send_homework(id_homework, self.e.get('1.0', tk.END))
+            father.t.reload(father.check_student_courses())
+
+        tk.Button(self, text='Enviar', command=lambda :send()).pack(pady=50)
         tk.Button(self, text='regresar', command=lambda: self.change_page(father)).pack()  # volver al anterior
 
 class CreateCourse(Page):
@@ -200,7 +213,7 @@ class CrearTarea(Page):
         self.tittle.pack()
 
         def solo_numeros(event):
-            if event.char.isdigit() or event.keysym in ('BackSpace', 'Delete', 'Left', 'Right'): return
+            if event.char.isdigit() or event.keysym in ('BackSpace', 'Delete', 'Left', 'Right'): return None
             else: return "break"
 
         tk.Label(self, text='Agrega descripcion').pack(pady=10)

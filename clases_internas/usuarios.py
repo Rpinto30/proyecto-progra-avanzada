@@ -116,15 +116,28 @@ class Student(User):
         return final_code
 
     def course_register(self, course_id):
-        if course_id not in data.courses:
-            return False
-        else:
-            if self.user_id not in data.courses[course_id]['students']:
-                data.courses[course_id]['students'].append(self.user_id)
-                data.students[self.user_id]['courses'].append(course_id)
-                data.save_data("courses")
-                data.save_data("students")
-            return True
+        if self.user_id not in data.courses[course_id]['students']:
+            data.courses[course_id]['students'].append(self.user_id)
+            data.students[self.user_id]['courses'].append(course_id)
+            data.save_data("courses")
+            data.save_data("students")
+            for id_, values in data.courses[course_id]['material'].items():
+                if id_ not in data.students[self.user_id]['material']:
+                    homeworkdict = {
+                        "tittle": values['tittle'],
+                        "description": values['description'],
+                        "points": values['points'],
+                        "course": course_id,
+                        "obtained_points": 0,
+                        "homework": ''
+                    }
+                    data.students[self.user_id]['material'][id_] = homeworkdict
+                    data.save_data("students")
+
+
+    def send_homework(self, id_homework, entry_homework):
+        data.students[self.user_id]['material'][id_homework]['homework'] = entry_homework
+        data.save_data('students')
 
 #tea1 = Instructor("Pepe", "123")
 #tea1.create_instructor("Pepe", "123")

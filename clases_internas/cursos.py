@@ -47,7 +47,7 @@ class Courses:
                 if repeat_times > 10 ** digits: digits += 1
         return final_code
 
-    def assign_homework(self, entry_tittle: str, entry_description: str, entry_points: str ):
+    def assign_homework(self, entry_tittle: str, entry_description: str, entry_points: str):
         homewor = Homework(entry_tittle, entry_description, self._course_id, entry_points)
         homeworkdict = {
             "tittle": entry_tittle,
@@ -59,6 +59,7 @@ class Courses:
         for student in data.courses[self._course_id]['students']:
             data.students[student]['material'][homewor.material_id] = homeworkdict
             data.students[student]['material'][homewor.material_id]["obtained_points"] = 0
+            data.students[student]['material'][homewor.material_id]["homework"] = ''
         data.save_data("courses")
         data.save_data("students")
 
