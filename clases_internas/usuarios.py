@@ -30,9 +30,8 @@ class Instructor(User):
     def __init__(self, name, password, user_id=''):
         super().__init__(name, password, user_id)
         self.__courses = {}
-        self.__create_instructor(name, password)
 
-    def __create_instructor(self, entry_name, entry_password):
+    def create_instructor(self, entry_name, entry_password):
         if entry_name.strip() == "" or entry_password.strip() == "":
             if entry_name.strip() == "" and entry_password.strip() == "":
                 return -3
@@ -45,7 +44,8 @@ class Instructor(User):
         else:
             data.instructors[self.user_id] = {
                 "name": self._name,
-                "password": self._password
+                "password": self._password,
+                "courses": []
             }
             data.save_data("instructors")
             return 0
@@ -53,12 +53,15 @@ class Instructor(User):
     def create_course(self, entry_name:str):
         if entry_name.strip() != "":
             course = Courses(entry_name, self)
-            data.courses[course.course_id] = {
-                "corse_name": course.course_name,
-                "teacher": data.instructors[self.user_id],
-                "students": {},
+            coursedict = {
+                "course_name": course.course_name,
+                "teacher": self.user_id,
+                "students": [],
                 "material": {}
             }
+            data.courses[course.course_id] = coursedict
+            data.instructors[self.user_id]['courses'].append(course.course_id)
+            data.save_data("instructors")
             data.save_data("courses")
 
 
@@ -79,7 +82,6 @@ class Student(User):
     def __init__(self, name, password,user_id=''):
         super().__init__( name, password, user_id)
         self.__courses = {}
-        self.create_student(name, password)
 
     def create_student(self, entry_name:str, entry_password:str):
         if entry_name.strip() == "" or entry_password.strip() == "":
@@ -94,7 +96,9 @@ class Student(User):
         else:
             data.students[self._user_id] = {
                 "name": self._name,
-                "password": self._password
+                "password": self._password,
+                "material": {},
+                "courses": []
             }
             data.save_data("students")
             return 0
@@ -115,9 +119,22 @@ class Student(User):
         if course_id not in data.courses:
             return False
         else:
-            data.courses[course_id]['students'][self.user_id] = {
-                "name": self._name,
-                "password": self._password
-            }
+            data.courses[course_id]['students'].append(self.user_id)
+            data.students[self.user_id]['courses'].append(course_id)
+            data.save_data("courses")
+            data.save_data("students")
             return True
 
+#tea1 = Instructor("Pepe", "123")
+#tea1.create_instructor("Pepe", "123")
+#tea1.create_course("CursoPrueba")
+
+
+#student1 = Student("Rodrigo", "123")
+#student1.create_student("Rodrigo", "123")
+#student1.course_register("SUB7142")
+
+
+course1 = Courses("CursoPrueba", "IST3732", ["STU1198"], "", "SUB7142")
+#course1.assign_homework("Tarea1", "Tarea casa", "20")
+course1.qualification("STU1198", "HOM8", "4")

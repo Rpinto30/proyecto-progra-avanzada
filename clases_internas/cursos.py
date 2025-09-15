@@ -1,18 +1,22 @@
 # Clase cursos
 import random
 from data.data_base import data
+from material import Homework
 
 class Courses:
-    def __init__(self, course_name, teacher):
-        self.__course_id = self.__create_code()
+    def __init__(self, course_name, teacher, student = "", material = "", _id=''):
+        if _id == '': self._course_id = self._create_code()
+        else: self._course_id = _id
+        if student == '': self._student = {}
+        else: self._student = student
+        if material == '': self._material = {}
+        else: self._material = material
         self._course_name = course_name
         self.__teacher = teacher
-        self.__student = {}
-        self.__material = []
 
     @property
     def course_id(self):
-        return self.__course_id
+        return self._course_id
 
     @property
     def course_name(self):
@@ -24,13 +28,13 @@ class Courses:
 
     @property
     def student(self):
-        return self.__student
+        return self._student
 
     @property
     def material(self):
-        return self.__material
+        return self._material
 
-    def __create_code(self):
+    def _create_code(self):
         final_code = ""
         repeat_times = 0
         digits = 4
@@ -43,6 +47,24 @@ class Courses:
                 if repeat_times > 10 ** digits: digits += 1
         return final_code
 
+    def assign_homework(self, entry_tittle: str, entry_description: str, entry_points: str ):
+        homewor = Homework(entry_tittle, entry_description, self._course_id, entry_points)
+        homeworkdict = {
+            "tittle": entry_tittle,
+            "description": entry_description,
+            "points": entry_points,
+            "course": self._course_id
+        }
+        data.courses[self._course_id]['material'][homewor.material_id] = homeworkdict
+        for student in data.courses[self._course_id]['students']:
+            data.students[student]['material'][homewor.material_id] = homeworkdict
+            data.students[student]['material'][homewor.material_id]["obtained_points"] = 0
+        data.save_data("courses")
+        data.save_data("students")
 
+    def qualification(self, student_id, homework_id, points):
+        if student_id in data.courses[self._course_id]['students']:
+            data.students[student_id]['material'][homework_id]["obtained_points"] = int(points)
+            data.save_data("students")
 
 
