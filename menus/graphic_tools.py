@@ -343,7 +343,7 @@ class Image(tk.Label):
         img_width = photo.width()
         img_height = photo.height()
 
-        if img_width < width_screen: print('as')
+        photo = photo.zoom(8,8).subsample(10,10)
 
         self.image = photo
         self.config(image=self.image)
