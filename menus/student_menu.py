@@ -3,7 +3,7 @@ from graphic_tools import Window, PagePrincipal, ScrollFrame
 from clases_internas.usuarios import Student
 from data.data_base import data
 
-root = Window('Test', (1920,1080))
+#root = Window('Test', (1920,1080))
 
 CL_BG = '#669BBC'
 CL_BG_L = '#669BBC'
@@ -23,10 +23,8 @@ FG_LT = '#FDF0D5'
 
 WID_F_L = 480
 
-
-
 class StudentMenu(PagePrincipal):
-    def __init__(self, master:Window, student:Student, **kwargs):
+    def __init__(self, master, student:Student, parent, **kwargs):
         super().__init__(master, bg=CL_BG, **kwargs)
         #LEFT FRAME
         self.__f_info_left = tk.Frame(self, width=WID_F_L, height=1080, bg=CL_BG_L)
@@ -51,14 +49,14 @@ class StudentMenu(PagePrincipal):
                                              window=tk.Label(self.__c_lable_courses, text='Cursos', bg=CL_BG_LM, fg='#ffffff', font=(FONT, 30, 'bold')))
 
         self.scr_courses = ScrollFrame(self.__f_info_left,
-                                       width=WID_F_L, height=(1080-590), vbar_position='left', cl_bars_bg=CL_SCROLL_BG, cl_bars_des=CL_SCOLL, cl_bars_act=CL_SCOLL_AC, bg=CL_BG_SCR_L)
+                                       width=WID_F_L, height=(1080-350), vbar_position='left', cl_bars_bg=CL_SCROLL_BG, cl_bars_des=CL_SCOLL, cl_bars_act=CL_SCOLL_AC, bg=CL_BG_SCR_L)
         self.scr_courses.pack()
 
         for courses_id in data.students[student.user_id]['courses']:
             f_course_scroll = tk.Frame(self.scr_courses.scr_frame, bg=CL_BG_SCR_L,highlightthickness=2, highlightbackground='#0D0C2D')
             self.scr_courses.pack_on_scroll(f_course_scroll, pady=10, fill='x',padx=2)
             tk.Label(f_course_scroll, text=str(data.courses[courses_id]['course_name']), font=(FONT, 39), anchor='center', width=14, bg=CL_BG_SCR_L).pack( fill='x',padx=10)
-            tk.Label(f_course_scroll, text=str(courses_id), font=(FONT, 14), anchor='center', width=39, bg=CL_BG_SCR_L).pack(fill='x',padx=10)
+            tk.Label(f_course_scroll, text=f"{str(courses_id)} - {str(data.instructors[data.courses[courses_id]['teacher']]['name'])}", font=(FONT, 14), anchor='center', width=39, bg=CL_BG_SCR_L).pack(fill='x',padx=10)
 
         #RIGHT FRAME
         self.__f_info_right = tk.Frame(self, width=(1920 - WID_F_L), height=1080, bg=CL_BG_R)
@@ -68,6 +66,6 @@ class StudentMenu(PagePrincipal):
 
 
 
-S = StudentMenu(root, Student('Pepito', '123', 'STU123'))
+#S = StudentMenu(root, Student('Pepito', '123', 'STU123'), None)
 
-root.mainloop()
+#root.mainloop()
