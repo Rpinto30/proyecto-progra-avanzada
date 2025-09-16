@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.ttk as ttk
 
 class Window(tk.Tk):
     # DOCSTRING: https://www.datacamp.com/tutorial/docstrings-python
@@ -116,39 +117,45 @@ class PagePrincipal(Page):
     def __init__(self, master: Window | tk.Misc, **kwargs):
         super().__init__(master=master, **kwargs)
         master.set_principal_page(self)
-
 class ScrollFrame(tk.Frame):
-    def __init__(self, master, vbar_position=None, hbar_position=None, **kwargs):
+    def __init__(self, master, vbar_position=None, hbar_position=None,
+                 cl_bars_bg='#ffffff', cl_bars_tro='#ffffff', cl_bars_active='#ffffff', **kwargs):
         super().__init__(master=master, **kwargs)
-        if int(self.cget('width')) > 0 and int(self.cget('height')) > 0: self.pack_propagate(False)
-        self._canvas_scroll = tk.Canvas(self, width=self.cget('width'), height=self.cget('height'), bg= self.cget('bg'))
-        #self.__canvas_scroll.pack_propagate(False)
-        # BARRAS PARA MOVER (SE ME OLVIDO COMO SE DICEN EN ESPAÑOL xd)
-        self.__vbar = tk.Scrollbar(self, orient="vertical")  # VERTICAL BAR
+        style = ttk.Style() #Aprendi a hacer estilo XD
+        style.theme_use("default")
+        style.configure("Custom.Vertical.TScrollbar",
+                        background=cl_bars_tro,
+                        troughcolor=cl_bars_bg,
+                        arrowcolor="black",
+                        bordercolor=cl_bars_bg)
+        style.configure("Custom.Horizontal.TScrollbar",
+                        background=cl_bars_tro,
+                        troughcolor=cl_bars_bg,
+                        arrowcolor="black",
+                        bordercolor=cl_bars_bg)
+        self._canvas_scroll = tk.Canvas(self, width=self.cget('width'), height=self.cget('height'),bg='red', highlightthickness=0, bd=0)
+        self.__vbar = ttk.Scrollbar(self, orient="vertical", style="Custom.Vertical.TScrollbar")
         self.__vbar.config(command=self._canvas_scroll.yview)
-        self.__hbar = tk.Scrollbar(self, orient="horizontal")  # HORIZONTAL BAR
+        self.__hbar = ttk.Scrollbar(self, orient="horizontal", style="Custom.Horizontal.TScrollbar")
         self.__hbar.config(command=self._canvas_scroll.xview)
-        #Configura el vbar y hbar para alinearlos dentro de este frame y se ajusta el comando que se llama cuando se actualiza el scroll
         self._canvas_scroll.config(xscrollcommand=self.__hbar.set, yscrollcommand=self.__vbar.set)
-        if vbar_position is not None: self.__vbar.pack(side=vbar_position, fill="y")
-        if hbar_position is not None: self.__hbar.pack(side=hbar_position, fill="x")
+        if vbar_position is not None:self.__vbar.pack(side=vbar_position, fill="y")
+        if hbar_position is not None:self.__hbar.pack(side=hbar_position, fill="x")
 
-        self._canvas_scroll.pack(side="left", expand=True, fill='both')
-        self.__sub_frame = tk.Frame(self._canvas_scroll, width=self.cget('width'), height=self.cget('height'), bg= self.cget('bg'))
-        #self.__sub_frame.pack_propagate(False)
+
+        self.__sub_frame = tk.Frame(self._canvas_scroll, bg=self.cget('bg'))
         self._canvas_scroll.create_window((0, 0), window=self.__sub_frame, anchor="nw")
         self.__sub_frame.bind("<Configure>",
                               lambda e: self._canvas_scroll.configure(
-                                  scrollregion=self._canvas_scroll.bbox("all")))
+                                  scrollregion=self._canvas_scroll.bbox('0,0,0,0')))
+        print(self._canvas_scroll.bbox('all'))
+        self._canvas_scroll.pack(fill='both', expand=True)
 
     def pack_on_scroll(self, widget:tk.Widget, **kwargs):
         widget.pack(**kwargs)
-        # Actualiza el canvas por cada pack
         self._canvas_scroll.configure(scrollregion=self._canvas_scroll.bbox("all"))
-
     @property
-    def scr_frame(self):
-        return self.__sub_frame
+    def scr_frame(self):return self.__sub_frame
 
 class Tabla(ScrollFrame):
     def __init__(self, master, matrix:list,
