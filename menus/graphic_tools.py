@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter import PhotoImage
 
 class Window(tk.Tk):
     # DOCSTRING: https://www.datacamp.com/tutorial/docstrings-python
@@ -18,17 +19,24 @@ class Window(tk.Tk):
         self.__principal_page = None
         self.__current_frame = None
         self.__desactive_exit = False
+        self.w = self.winfo_screenwidth()
+        self.h = self.winfo_screenheight()
         # ----------------------------------WINDOWS-----------------------------------
         self.title(title)
-        self.geometry(f"{geometry[0]}x{geometry[1]}")
-        # self.resizable(False,False)
+        self.geometry(f"{self.w}x{self.h}")
+        #self.resizable(False,False)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.protocol("WM_DELETE_WINDOW", self.exit_root)
+
         # ----------------------------------ICONO-----------------------------------
         if icon_image != '':
             icon_image = tk.PhotoImage(file=icon_image)
             self.iconphoto(True, icon_image)
+
+        self.update_idletasks()
+        print(self.w)
+        print(self.h)
 
     def set_principal_page(self, page):
         """
@@ -326,6 +334,22 @@ class Tabla(ScrollFrame):
         self.matrix = matrix
         self.__table.destroy()
         self.__create_table(self.matrix)
+
+class Image(tk.Label):
+    def __init__(self, master, file:str, width_screen:int, height_screen:int, **kwargs):
+        super().__init__(master=master, **kwargs)
+        # Cargar imagen original
+        photo = tk.PhotoImage(file=file)
+        img_width = photo.width()
+        img_height = photo.height()
+
+        if img_width < width_screen: print('as')
+
+        self.image = photo
+        self.config(image=self.image)
+        print(width_screen, img_width)
+        print(height_screen, img_height)
+
 
 def pack_create_line(master:tk.Frame, left_widget, right_widget, _padx=0, _pady=0, width=0,height=0, bg='#f0f0f0'):
     row = tk.Frame(master, width=width+5, height=height, bg=bg)
