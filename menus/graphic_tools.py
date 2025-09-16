@@ -243,9 +243,9 @@ class Tabla(ScrollFrame):
                 if self.cell_command:
                     def handler(event, row=i, col=j):
                         if self.select_mode == "row":
-                            value = self.matrix[row][0]  # primer elemento de la fila
+                            value = self.matrix[row] # primer elemento de la fila
                         elif self.select_mode == "column":
-                            value = self.matrix[0][col]  # primer elemento de la columna
+                            value = self.matrix[row][col]  # primer elemento de la columna
                         else:
                             value = self.matrix[row][col]  # valor normal
                         self.cell_command(row, col, value)
@@ -255,7 +255,7 @@ class Tabla(ScrollFrame):
                 e.grid(row=i, column=j)
                 row.append(e)
 
-            # --- Ajuste dinámico del canvas ---
+        # --- Ajuste dinámico del canvas ---
         if self.propagate_height <= 0 or self.propagate_width == 0: self.master.update_idletasks()
 
         if self.propagate_width <= 0:

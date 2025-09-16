@@ -187,6 +187,7 @@ class CreateCourse(Page):
 
         def create_tarea(row, colum, value):
             if row > 0:
+                value = value[0]
                 self.change_page(
                     CrearTarea(self.master, self, teacher,
                                Courses(data.courses[str(value)]['course_name'], data.courses[str(value)]['teacher'],
@@ -206,6 +207,7 @@ class CreateCourse(Page):
 class CrearTarea(Page):
     def __init__(self, master, parent, teacher, course:Courses, **kwargs):
         super().__init__(master=master, bg='#B1945E', **kwargs)
+        self.course = course
         tk.Label(self, text=f'Agrega tarea para {course.course_name}').pack()
         tk.Label(self, text='Agrega titulo').pack(pady=10)
         self.tittle = tk.Entry(self)
@@ -228,6 +230,47 @@ class CrearTarea(Page):
 
         tk.Button(self, text='Asignar', command=lambda:crear()).pack(pady=20)
         tk.Button(self, text='regresar', command=lambda:self.change_page(parent)).pack(pady=20)
+
+        def check_hom(row, colum, value):
+            if value[-1] == 'Entregado':
+                self.change_page(CheckHomework(self.master, value, course, self))
+        self.t = Tabla(self, matrix=self.check_student_homework(), cell_command=check_hom, select_mode='row')
+        self.t.pack(side='right')
+
+    def check_student_homework(self):
+        c = [['Estudiante', 'ID', 'Tarea', 'ID', 'Estado']]
+        for id_st in data.courses[self.course.course_id]['students']:
+            name_ = data.students[id_st]['name']
+            for id_hom, hom in data.students[id_st]['material'].items():
+                if hom['course'] == self.course.course_id:
+                    line = [name_, id_st, hom['tittle'], id_hom]
+                    if hom['homework'] == '': line.append('No entregado')
+                    else: line.append('Entregado')
+                    c.append(line)
+
+        return c
+
+class CheckHomework(Page):
+    def __init__(self, master, ids_, course, parent, **kwargs):
+        super().__init__(master=master, **kwargs)
+        tk.Label(self, text="Tarea:").pack(pady=20)
+        tk.Label(self, text=str(data.students[ids_[1]]['material'][ids_[3]]['homework'])).pack()
+
+        def solo_numeros(event):
+            if event.char.isdigit() or event.keysym in ('BackSpace', 'Delete', 'Left', 'Right'): return None
+            else: return "break"
+
+        self.e = tk.Entry(self)
+        self.e.bind("<KeyPress>", solo_numeros)
+        self.e.pack()
+
+        def subir_punteo():
+            if 0<= int(self.e.get()) <= int(data.courses[course.course_id]['material'][ids_[3]]['points']):
+                course.qualification(ids_[1], ids_[3], int(self.e.get()))
+
+        tk.Button(self, text='Subir punteo', command=subir_punteo).pack()
+        tk.Button(self, text='regresar', command=lambda: self.change_page(parent)).pack(pady=20)
+
 
 #CREACION DE MENÚS (Instancias)
 login = Login(root)
