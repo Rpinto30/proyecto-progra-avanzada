@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from math import floor
 from tkinter import PhotoImage
 
 class Window(tk.Tk):
@@ -24,7 +25,7 @@ class Window(tk.Tk):
         # ----------------------------------WINDOWS-----------------------------------
         self.title(title)
         self.geometry(f"{self.w}x{self.h}")
-        #self.resizable(False,False)
+        #self.resizable(True,True)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.protocol("WM_DELETE_WINDOW", self.exit_root)
@@ -338,17 +339,27 @@ class Tabla(ScrollFrame):
 class Image(tk.Label):
     def __init__(self, master, file:str, width_screen:int, height_screen:int, **kwargs):
         super().__init__(master=master, **kwargs)
-        # Cargar imagen original
+        print("-"*30)
         photo = tk.PhotoImage(file=file)
         img_width = photo.width()
         img_height = photo.height()
 
-        photo = photo.zoom(8,8).subsample(10,10)
+        #Escala de la pantalla sobre la escala de la imagen
+        scale_w = width_screen / img_width
+        scale_h = height_screen / img_height
+        scale = min(scale_w, scale_h) #El menor para que entre en la pantalla
+
+        zoom_factor = floor(scale * 10) #No sé por qué, pero si lo hago más de 10 peta, al menos así puedo hacer escala en deciamles entre 0 y 1 (1/10, 2/10...9/10,10/10)
+        if zoom_factor < 1: zoom_factor = 1
+        photo = photo.zoom(zoom_factor, zoom_factor).subsample(10, 10)
 
         self.image = photo
         self.config(image=self.image)
-        print(width_screen, img_width)
-        print(height_screen, img_height)
+
+        print("Original:", img_width, img_height)
+        print("Escala aproximada:", scale)
+        print("Zoom/Subsample:", zoom_factor, "/", 10)
+        print("Nueva:", photo.width(), photo.height())
 
 
 def pack_create_line(master:tk.Frame, left_widget, right_widget, _padx=0, _pady=0, width=0,height=0, bg='#f0f0f0'):
