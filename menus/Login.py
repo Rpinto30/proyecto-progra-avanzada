@@ -37,18 +37,7 @@ class Login(PagePrincipal):
         logo_photo.image = logo
         logo_photo.pack()
 
-        #Labels
-        l_front, e_front = ('Arial', 12, 'bold'), ('Arial', 30)
-        tk.Label(self.f_izq, text="Login", fg='black', font=('Arial', 50, 'bold'), bg='white').pack(side="top")
-        l_user = tk.Label( text="Codigo\nde usuario:", fg='black', font=('Arial', 30, 'bold'), justify='left', bg='white')
-        l_password = tk.Label(text="Contraseña:", fg='black', font=('arial', 30, 'bold'), bg='white')
-        #Entry
-        self.e_user = tk.Entry(width=20, font=e_front, relief="solid")
-        self.e_password = tk.Entry(width=20, font=e_front, relief="solid")
-
         #COMMANDS
-
-
         def log_in():
             def show_error(text='Error: No se pudo iniciar sesión'):
                 def exit_error():
@@ -58,38 +47,66 @@ class Login(PagePrincipal):
                 self.l_inf.config(text=text, fg='red')
                 self.l_inf.after(1500, exit_error)
 
+            def init_student(): #PARA INICIAR COMO ESTUDIANTE
+                self.e_user.config(state='normal')
+                self.e_password.config(state='normal')
+                self.b_login.config(state='normal')
+                self.l_inf.config(text=self.inf_text)
+
+                self.change_page(StudentMenu(self.master, parent=self,
+                                             student=Student(data.students[str(self.e_user.get())]['name'],self.e_password.get(), str(self.e_user.get()))))
+
             if str(self.e_user.get())[:3] == 'IST':
                 if str(self.e_user .get()) in data.instructors:
                     if data.instructors[str(self.e_user .get())]['password'] == str(self.e_password.get()):
-                        pass#self.change_page(CreateCourse(self.master,
-                        #                              teacher=Instructor(data.instructors[str(self.e_user .get())]['name'], self.e_password.get(), str(self.e_user .get())),
-                        #                              father=self))
+                        pass#self.after()
                     else: show_error()
                 else: show_error()
             elif str(self.e_user.get())[:3] == 'STU':
                 if str(self.e_user .get()) in data.students:
                     if data.students[str(self.e_user .get())]['password'] == str(self.e_password.get()):
-                        self.change_page(StudentMenu(self.master,
-                                                        student=Student(data.students[str(self.e_user .get())]['name'], self.e_password.get(), str(self.e_user .get())), parent=self))
+                        self.e_user.config(state='disabled')
+                        self.e_password.config(state='disabled')
+                        self.b_login.config(state='disabled')
+                        self.l_inf.config(text='Iniciando sesión...')
+                        self.b_login.after(1300, init_student)
                     else: show_error()
                 else: show_error()
 
             else: show_error('Error: No se pudo iniciar sesión\nCódigo no valido')
 
+        # Labels
+        l_front, e_front = ('Arial', 12, 'bold'), ('Arial', 30)
+        tk.Label(self.f_izq, text="Login", fg='black', font=('Arial', 50, 'bold'), bg='white').pack(side="top")
+
         #Buttons
-        b_forgot = tk.Button( text='Olvido de contraseña', font=('Arial',15, 'bold'), fg='red', width=20, highlightthickness=0, bd=0, bg='white', cursor='hand2')
-        b_creaete = tk.Button(text='Crear Cuenta', font=('Arial',15, 'bold'), fg='red', width=20, highlightthickness=0, bd=0, bg='white', cursor='hand2')
+        #self.b_forgot = tk.Button()
+        #self.b_creaete = tk.Button(text='Crear Cuenta', font=('Arial',15, 'bold'), fg='red', width=20, highlightthickness=0, bd=0, bg='white', cursor='hand2')
         self.b_login = tk.Button(self.f_izq,text='Log In', font=('Arial', 30, 'bold'), fg='black', width=20, bg='red', activebackground='#FF9EA2', cursor='hand2', relief='solid', command=log_in)
+        #USUARIO
+        l_user, self.e_user = pack_create_line(self.f_izq,
+                                               tk.Label, {'text':"Codigo\nde usuario:", 'fg':'black', 'font':('Arial', 30, 'bold'), 'justify':'left','bg':'white'},
+                                               tk.Entry, {'width':20, 'font':e_front, 'relief':"solid"},
+                                               _pady=60 , _padx=42, width=450,  bg='white')
+        #CONTRASEÑA
+        l_password, self.e_password = pack_create_line(self.f_izq,
+                                                  tk.Label, {'text': "Contraseña", 'fg': 'black', 'font': ('Arial', 30, 'bold'),'bg': 'white'},
+                                                  tk.Entry, {'width': 20, 'font': e_front, 'relief': "solid"},
+                                                  _padx=40, width=450,  bg='white')
 
+        self.b_forgot,self.b_creaete = pack_create_line(self.f_izq,
+                                                        tk.Button, {'text':'Olvido de contraseña', "font":('Arial',15, 'bold'), "fg":'red', "width":20, "highlightthickness":0, "bd":0, "bg":'white', "cursor":'hand2'},
+                                                        tk.Button,
+                                                        {'text': 'Crear Cuenta', "font": ('Arial', 15, 'bold'), "fg": 'red', "width": 20, "highlightthickness": 0, "bd": 0,"bg": 'white', "cursor": 'hand2'},
+                                                        width=720, height=40, _pady=60, bg='white'
+        )
 
-        pack_create_line(self.f_izq, l_user, self.e_user, _pady=100 , _padx=42, width=450,  bg='white')
-        pack_create_line(self.f_izq, l_password, self.e_password, _padx=10, width=450,  bg='white' )
-        pack_create_line(self.f_izq, b_forgot, b_creaete, width=720, height=40, _pady=20,  bg='white')
         self.b_login.pack(pady=80, padx=30)
         self.inf_text = 'Portal academico de Universidad RAR de Quetzaltenango'
         self.l_inf = tk.Label(self.f_izq, text=self.inf_text, font=('Arial', 15, 'bold'), fg='gray', bg='white')
         self.l_inf.pack(pady=10, padx=30)
 
+        self.clear_widgest = [self.e_password, self.e_user]
 
 log = Login(root)
 root.mainloop()

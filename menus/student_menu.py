@@ -1,5 +1,5 @@
 import tkinter as tk
-from graphic_tools import Window, PagePrincipal, ScrollFrame
+from graphic_tools import Window, Page, ScrollFrame
 from clases_internas.usuarios import Student
 from data.data_base import data
 
@@ -23,7 +23,7 @@ FG_LT = '#FDF0D5'
 
 WID_F_L = 480
 
-class StudentMenu(PagePrincipal):
+class StudentMenu(Page):
     def __init__(self, master, student:Student, parent, **kwargs):
         super().__init__(master, bg=CL_BG, **kwargs)
         #LEFT FRAME
@@ -63,6 +63,7 @@ class StudentMenu(PagePrincipal):
         self.__f_info_right.pack_propagate(False)
         self.__f_info_right.pack(side='right')
 
+        tk.Button(self.__f_info_right,text='Salir', command=lambda :self.change_page(parent)).pack(side="right")
 
 
 
