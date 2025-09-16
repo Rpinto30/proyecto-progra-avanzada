@@ -119,21 +119,22 @@ class PagePrincipal(Page):
         master.set_principal_page(self)
 class ScrollFrame(tk.Frame):
     def __init__(self, master, vbar_position=None, hbar_position=None,
-                 cl_bars_bg='#ffffff', cl_bars_tro='#ffffff', cl_bars_active='#ffffff', **kwargs):
+                 cl_bars_bg='#ffffff', cl_bars_des='#ffffff', cl_bars_act='#ffffff', **kwargs):
         super().__init__(master=master, **kwargs)
         style = ttk.Style() #Aprendi a hacer estilo XD
-        style.theme_use("default")
+        style.theme_use("alt")
         style.configure("Custom.Vertical.TScrollbar",
-                        background=cl_bars_tro,
-                        troughcolor=cl_bars_bg,
-                        arrowcolor="black",
-                        bordercolor=cl_bars_bg)
+                        background=cl_bars_des,  #Los cosos de arriba
+                        troughcolor=cl_bars_bg,  #El fondo
+                        arrowcolor=cl_bars_bg,  #Las flechas
+                        arrowsize=15, troughrelief='solid', relief='ridge')
         style.configure("Custom.Horizontal.TScrollbar",
-                        background=cl_bars_tro,
-                        troughcolor=cl_bars_bg,
-                        arrowcolor="black",
-                        bordercolor=cl_bars_bg)
-        self._canvas_scroll = tk.Canvas(self, width=self.cget('width'), height=self.cget('height'),bg='red', highlightthickness=0, bd=0)
+                        background=cl_bars_des,  # Los cosos de arriba
+                        troughcolor=cl_bars_bg,  # El fondo
+                        arrowcolor=cl_bars_bg,  # Las flechas
+                        arrowsize=15, troughrelief='solid', relief='ridge')
+        style.map("Custom.Vertical.TScrollbar", background=[("active", cl_bars_act), ("!active", cl_bars_des)])
+        self._canvas_scroll = tk.Canvas(self, width=self.cget('width'), height=self.cget('height'),bg=self.cget('bg'), highlightthickness=0, bd=0)
         self.__vbar = ttk.Scrollbar(self, orient="vertical", style="Custom.Vertical.TScrollbar")
         self.__vbar.config(command=self._canvas_scroll.yview)
         self.__hbar = ttk.Scrollbar(self, orient="horizontal", style="Custom.Horizontal.TScrollbar")
@@ -145,11 +146,24 @@ class ScrollFrame(tk.Frame):
 
         self.__sub_frame = tk.Frame(self._canvas_scroll, bg=self.cget('bg'))
         self._canvas_scroll.create_window((0, 0), window=self.__sub_frame, anchor="nw")
-        self.__sub_frame.bind("<Configure>",
-                              lambda e: self._canvas_scroll.configure(
-                                  scrollregion=self._canvas_scroll.bbox('0,0,0,0')))
-        print(self._canvas_scroll.bbox('all'))
+
+        def confi_canvas_scroll():
+            self.master.update_idletasks()
+            print(self._canvas_scroll.bbox('all'), self.cget('height'))
+
+            def al_chile_mejor_lo_desactivo_xd(): pass
+
+            # CUANDO LO QUE BOUDING BOX DEL CANVAS SEA MENOR A LA ALTURA DE ESTE FRAME
+            if self._canvas_scroll.bbox('all')[3] <= self.cget('height'):
+                self.__vbar.config(command=al_chile_mejor_lo_desactivo_xd) #El nombre ya dice que solución encontré JAJAJAJ
+            else:
+                self.__vbar.config(command=self._canvas_scroll.yview)
+                self._canvas_scroll.configure(scrollregion=self._canvas_scroll.bbox('all'))
+
+        self.__sub_frame.bind("<Configure>", lambda e: confi_canvas_scroll())
+
         self._canvas_scroll.pack(fill='both', expand=True)
+
 
     def pack_on_scroll(self, widget:tk.Widget, **kwargs):
         widget.pack(**kwargs)
