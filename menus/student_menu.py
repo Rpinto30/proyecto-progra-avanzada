@@ -54,7 +54,7 @@ class StudentMenu(PagePrincipal):
         self.scr_courses.pack()
 
         for courses_id in data.students[student.user_id]['courses']:
-            f_course_scroll = tk.Frame(self.scr_courses.scr_frame, bg=CL_BG_SCR_L,highlightthickness=2, highlightbackground='#0D0C2D')
+            f_course_scroll = tk.Frame(self.scr_coursfes.scr_frame, bg=CL_BG_SCR_L,highlightthickness=2, highlightbackground='#0D0C2D')
             self.scr_courses.pack_on_scroll(f_course_scroll, pady=10, fill='x',padx=2)
             tk.Label(f_course_scroll, text=str(data.courses[courses_id]['course_name']), font=(FONT, 39), anchor='center', width=14, bg=CL_BG_SCR_L).pack( fill='x',padx=10)
             tk.Label(f_course_scroll, text=f"{str(courses_id)} - {str(data.instructors[data.courses[courses_id]['teacher']]['name'])}", font=(FONT, 14), anchor='center', width=39, bg=CL_BG_SCR_L).pack(fill='x',padx=10)

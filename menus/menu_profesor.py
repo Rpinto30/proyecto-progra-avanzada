@@ -56,12 +56,19 @@ class MenuProfesores(PagePrincipal):
         self.__barra_materia_boton = tk.Button(self.__barra_profesor, text="Curso", bg=azul_marino, fg=fg, font=font)
         self.__barra_materia_boton.pack(fill="x", pady='250')
 
-        self.__frame_info = tk.Frame(self.__frame_profesor,  width=wid, height=250, bg=azul_marino)
+        self.__frame_info = tk.Frame(self.__frame_profesor,  width=1920 - 400, height=150, bg=azul_marino)
         self.__frame_info.pack_propagate(False)
         self.__frame_info.pack()
 
+        for course_id in data.instructors[user.user_id]['courses']:
+            scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg= 'yellow', highlightthickness=2, highlightbackground='pink')
+            self.scr_courses.pack_on_scroll(scroll_curso, pady=10, fill='x',padx=2)
+            tk.Button(scroll_curso, text=f"{str(data.courses[course_id]['course_name'])} \n {str(course_id)}" , font=(font, 35), anchor='center', width=14, bg='white').pack(fill='x')
 
-        # frame colocar info
+            '''
+            tk.Label(scroll_curso, text=str(data.courses[course_id]['course_name']), font=(font, 39), anchor='center', width=14, bg='black').pack(fill='x', padx=10)
+            tk.Label(scroll_curso, text=f'{str(course_id)} - {str(data.instructors[data.courses[course_id]['teacher']]['name'])}', font=(font, 14), anchor='center', width=39, bg='black').pack(fill='x', padx=10)
+            '''
 
 
 
