@@ -2,7 +2,7 @@ import tkinter as tk
 from graphic_tools import Window, Page, PagePrincipal, ScrollFrame
 from clases_internas.usuarios import Student
 from data.data_base import data
-from tkinter import PhotoImage
+
 
 root = Window('Test', (1920,1080))
 
@@ -71,10 +71,10 @@ class StudentMenu(PagePrincipal):
         def exit_(): print('Salir')#self.change_page(parent)
         tk.Button(self.__f_top_right, text='x', width=3, height=1, command=exit_, font=(FONT, 30, 'bold'), bg='#8292CB', relief='flat').pack(side="right", padx=50)
 
-        logo = PhotoImage(file=r'sources/Logo_iso_stu.png', width=199, height=200)
-        logo_photo = tk.Label(self.__f_top_right, image=logo, highlightthickness=0, bd=0)
-        logo_photo.image = logo
-        logo_photo.pack(side='left',padx=30)
+        #logo = tk.PhotoImage(file=r'sources/Logo_iso_stu.png', width=199, height=200)
+        #logo_photo = tk.Label(self.__f_top_right, image=logo, highlightthickness=0, bd=0)
+        #logo_photo.image = logo
+        #logo_photo.pack(side='left',padx=30)
 
 
 
