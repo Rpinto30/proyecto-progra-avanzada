@@ -330,6 +330,11 @@ class Tabla(ScrollFrame):
             if index == n_row%self.__colums:
                 row.config(width=width_)
 
+    def confi_cell(self, index=(0, 0)):
+        for n_row, row in enumerate(self.__table.winfo_children(), 0):
+            if index[1] == n_row%self.__colums and n_row//self.__colums == index[0]:
+                row.config( fg="red")
+                print(row.cget("text"))
 
     def reload(self, matrix):
         self.matrix = matrix
