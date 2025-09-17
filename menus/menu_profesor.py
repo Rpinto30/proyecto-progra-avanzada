@@ -1,7 +1,7 @@
 #Otra vez porque elimine mi archivo anterior por accidente
 import tkinter as tk
 from graphic_tools import Window, Page, PagePrincipal, ScrollFrame
-from clases_internas.usuarios import Student
+from clases_internas.usuarios import Instructor
 from data.data_base import data
 from tkinter import PhotoImage
 
@@ -20,24 +20,34 @@ fg = '#FDF0D5'
 root = Window("Menu Profesores", (1920,1080))
 
 class MenuProfesores(PagePrincipal):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, user:Instructor  ,**kwargs):
         super().__init__(master, **kwargs)
 
-        self.__frame_profesor = tk.Frame(self, width=1920, height=1080, bg=blanco_hueso)
-        self.__barra_profesor = tk.Frame(self, width=250, height=1080, bg=azul_claro)
+        self.__barra_profesor = tk.Frame(self, width=700, height=1080, bg=azul_claro)
         self.__barra_profesor.pack_propagate(False)
         self.__barra_profesor.pack(side='left')
+        self.__frame_profesor = tk.Frame(self.__barra_profesor, width=1920, height=1080, bg=blanco_hueso)
+        self.__frame_profesor.pack_propagate(False)
+        self.__frame_profesor.pack(pady=10)
+
 
         self.__barra_materia_boton = tk.Button(self.__barra_profesor, text="Curso", bg=azul_marino, fg=fg, font=font)
         self.__barra_materia_boton.pack(fill="x", pady='250')
 
         self.__frame_info = tk.Frame(self.__frame_profesor,  width=wid, height=250, bg=azul_marino)
         self.__frame_info.pack_propagate(False)
-        self.__frame_info.pack()\
+        self.__frame_info.pack()
+
+        # frame colocar info
+        frame__colocar = tk.Frame(self.__frame_info, bg='black')
+        frame__colocar.pack(pady=10)
+        tk.Label(frame__colocar, text= 'Profesor' , font=(font, 60, 'bold'), anchor='w', bg='black', fg=fg).pack(padx=35, fill='x', pady=10)
+        tk.Label(frame__colocar, text=f'{user.name} ({user.user_id})', font=(font, 25, 'bold'), anchor='w', bg='black', fg=fg).pack(padx=35, fill='x')
 
 
 
 
 
-men = MenuProfesores(root)
+
+men = MenuProfesores(root, user=Instructor('Milton Nimatuj', '123', 'IST'))
 root.mainloop()
