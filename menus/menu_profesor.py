@@ -38,14 +38,14 @@ class MenuProfesores(PagePrincipal):
         tk.Label(frame__colocar_info, text=f'{user.name} ({user.user_id})', font=(font, 25, 'bold'), anchor='w', bg=azul_claro,
                  fg=fg).pack(padx=35, fill='x')
 
-        self.c_lable_courses = tk.Canvas(self.__barra_profesor, width=wid, height=100, bg=blanco_hueso, highlightthickness=0,
+        self.c_lable_courses = tk.Canvas(self.__barra_profesor, width=wid, height=100, bg=azul_marino, highlightthickness=0,
                                          bd=0)
         self.c_lable_courses.create_line(10, 0, wid - 10, 0, fill='black', width=10)
         self.c_lable_courses.create_line(10, 100, wid - 10, 100, fill='black', width=10)
-        self.c_lable_courses.pack()
-        self.c_lable_courses.create_window(wid // 2, 100 // 2,
-                                           window=tk.Label(self.c_lable_courses, text='Cursos', bg=blanco_hueso,
-                                                           fg='black', font=(font, 30, 'bold')))
+        self.c_lable_courses.pack(fill='x')
+        self.c_lable_courses.create_window((wid // 2)-100, 100 // 2,
+                                           window=tk.Label(self.c_lable_courses, text='Cursos', bg=azul_marino,
+                                                           fg='white', font=(font, 30, 'bold')))
 
         self.scr_courses = ScrollFrame(self.__barra_profesor,
                                        width=wid, height=(1080 - 350), vbar_position='left',
