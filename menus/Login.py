@@ -1,7 +1,7 @@
 import tkinter as tk
 from turtledemo.penrose import inflatedart
 from clases_internas.usuarios import Instructor, Student
-from student_menu import StudentMenu
+#from student_menu import StudentMenu
 from menus.graphic_tools import Window, PagePrincipal, pack_create_line
 from data.data_base import data
 from tkinter import PhotoImage
@@ -54,8 +54,8 @@ class Login(PagePrincipal):
                 self.b_login.config(state='normal')
                 self.l_inf.config(text=self.inf_text)
 
-                self.change_page(StudentMenu(self.master, parent=self,
-                                             student=Student(data.students[str(self.e_user.get())]['name'],self.e_password.get(), str(self.e_user.get()))))
+                #self.change_page(StudentMenu(self.master, parent=self,
+                #                             student=Student(data.students[str(self.e_user.get())]['name'],self.e_password.get(), str(self.e_user.get()))))
 
             if str(self.e_user.get())[:3] == 'IST':
                 if str(self.e_user .get()) in data.instructors:
@@ -78,8 +78,8 @@ class Login(PagePrincipal):
 
 
         def create_user():
-
             self.top_level = tk.Toplevel(self.master, width=900, height=700, bg='white')
+            self.top_level.resizable(False,False)
             self.top_level.pack_propagate(False)  # PARA EVITAR QUE SE DEFORME AL HACER UN PACK
             txt = tk.Label(self.top_level, text='Crear usuario', font=('Arial', 25, 'bold'), fg='black', bg='red')
             txt.pack()
@@ -112,7 +112,7 @@ class Login(PagePrincipal):
                                                tk.Entry, {'width':20, 'font':e_front, 'relief':"solid"},
                                                _pady=60 , _padx=42,  bg='white')
 
-            self.button_login = tk.Button(self.f_toplevel, text='Log In', font=('Arial', 30, 'bold'), fg='black', width=20,
+            self.button_login = tk.Button(self.f_toplevel, text='Crear', font=('Arial', 30, 'bold'), fg='black', width=20,
                                      bg='red', activebackground='#FF9EA2', cursor='hand2', relief='solid',)
 
             self.button_login.pack(pady=80, padx=30)

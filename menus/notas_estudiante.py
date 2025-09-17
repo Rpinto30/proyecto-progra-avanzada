@@ -1,6 +1,5 @@
 import tkinter as tk
 from clases_internas.usuarios import Student
-from student_menu import StudentMenu
 from menus.graphic_tools import Window, PagePrincipal, pack_create_line
 from data.data_base import data
 from tkinter import PhotoImage
