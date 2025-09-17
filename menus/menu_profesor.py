@@ -71,6 +71,8 @@ class MenuProfesores(PagePrincipal):
             '''
 
 
+        def exit_(): print('Salir')#self.change_page(parent)
+        tk.Button(self.__frame_info, text='x', width=3, height=1, command=exit_, font=(font, 20, 'bold'), bg=azul_claro, relief='flat').pack(side="right", padx=50)
 
 
 
