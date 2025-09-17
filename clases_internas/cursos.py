@@ -4,15 +4,10 @@ from data.data_base import data
 from clases_internas.material import Homework
 
 class Courses:
-    def __init__(self, course_name, teacher, student = "", material = "", _id=''):
+    def __init__(self, course_name, _id=''):
         if _id == '': self._course_id = self._create_code()
         else: self._course_id = _id
-        if student == '': self._student = {}
-        else: self._student = student
-        if material == '': self._material = {}
-        else: self._material = material
         self._course_name = course_name
-        self.__teacher = teacher
 
     @property
     def course_id(self):
@@ -30,9 +25,6 @@ class Courses:
     def student(self):
         return self._student
 
-    @property
-    def material(self):
-        return self._material
 
     def _create_code(self):
         final_code = ""
@@ -53,14 +45,16 @@ class Courses:
             "tittle": entry_tittle,
             "description": entry_description,
             "points": entry_points,
-            "course": self._course_id
+            "course": self._course_id,
+            "obtained_points" :0,
+            "homework":''
         }
         data.courses[self._course_id]['material'][homewor.material_id] = homeworkdict
+        data.save_data("courses")
+        data.save_data("students")
+
         for student in data.courses[self._course_id]['students']:
             data.students[student]['material'][homewor.material_id] = homeworkdict
-            data.students[student]['material'][homewor.material_id]["obtained_points"] = 0
-            data.students[student]['material'][homewor.material_id]["homework"] = ''
-        data.save_data("courses")
         data.save_data("students")
 
     def qualification(self, student_id, homework_id, points):

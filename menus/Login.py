@@ -9,7 +9,7 @@ from tkinter import PhotoImage
 root = Window('Ventana', (1920, 1080))
 
 class Login(PagePrincipal):
-    def __init__(self, master,   **kwargs):
+    def __init__(self, master,  **kwargs):
         super().__init__(master=master, bg='red', **kwargs)
         self.f_der = tk.Frame
         self.f_top = tk.Frame
