@@ -57,11 +57,12 @@ class Homework(DidacticMaterial):
 
 
 class Exam(DidacticMaterial):
-    def __init__(self, tittle, description, course_id, questions, correct_questions, _material_id = ""):
+    def __init__(self, tittle, description, course_id, questions, correct_questions, points, _material_id = ""):
         super().__init__(description, course_id, _material_id)
         self._questions = questions
         self._questions = correct_questions
         self._obteined_points = 0
+        self._max_points = points
         self._tittle = tittle
 
 

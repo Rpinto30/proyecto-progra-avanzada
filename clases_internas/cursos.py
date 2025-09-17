@@ -1,7 +1,7 @@
 # Clase cursos
 import random
 from data.data_base import data
-from clases_internas.material import Homework, Publish
+from clases_internas.material import Homework, Publish, Exam
 
 
 class Courses:
@@ -67,6 +67,25 @@ class Courses:
         }
         data.courses[self._course_id]['material'][publish.material_id] = homeworkdict
         data.save_data("courses")
+
+    def assing_examn(self, tittle, desc, coorect_question):
+        homewor = Exam(tittle, desc, self._course_id, {}, coorect_question)
+        homeworkdict = {
+            "tittle": titlte,
+            "description": desc,
+            "points": entry_points,
+            "course": self._course_id,
+            "obtained_points": 0,
+            "homework": ''
+        }
+        data.courses[self._course_id]['material'][homewor.material_id] = homeworkdict
+        data.save_data("courses")
+        data.save_data("students")
+
+        for student in data.courses[self._course_id]['students']:
+            data.students[student]['material'][homewor.material_id] = homeworkdict
+        data.save_data("students")
+
     def qualification(self, student_id, homework_id, points):
         if student_id in data.courses[self._course_id]['students']:
             data.students[student_id]['material'][homework_id]["obtained_points"] = int(points)
