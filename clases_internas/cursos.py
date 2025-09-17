@@ -1,7 +1,8 @@
 # Clase cursos
 import random
 from data.data_base import data
-from clases_internas.material import Homework
+from clases_internas.material import Homework, Publish
+
 
 class Courses:
     def __init__(self, course_name, _id=''):
@@ -57,6 +58,15 @@ class Courses:
             data.students[student]['material'][homewor.material_id] = homeworkdict
         data.save_data("students")
 
+    def assign_publish(self, entry_tittle: str, entry_description: str):
+        publish = Publish(entry_tittle, entry_description, self._course_id)
+        homeworkdict = {
+            "tittle": entry_tittle,
+            "description": entry_description,
+            "course": self._course_id,
+        }
+        data.courses[self._course_id]['material'][publish.material_id] = homeworkdict
+        data.save_data("courses")
     def qualification(self, student_id, homework_id, points):
         if student_id in data.courses[self._course_id]['students']:
             data.students[student_id]['material'][homework_id]["obtained_points"] = int(points)

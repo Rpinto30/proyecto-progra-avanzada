@@ -79,6 +79,7 @@ class SendHomework(PagePrincipal):
             self.cancel.pack(pady=5)
             self.erro_text.pack_forget()
             self.homw = homework
+            print(self.homw)
 
         def denegate(text):
             self.select.config(state='normal')
