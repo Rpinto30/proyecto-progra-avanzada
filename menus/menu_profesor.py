@@ -48,7 +48,7 @@ class MenuProfesores(PagePrincipal):
                                                            fg='white', font=(font, 30, 'bold')))
 
         self.scr_courses = ScrollFrame(self.__barra_profesor,
-                                       width=wid, height=(1080 - 350), vbar_position='left',
+                                       width=wid, height=(1080 - 450), vbar_position='left',
                                        cl_bars_bg=scroll_bg, cl_bars_des=scroll, cl_bars_act=scroll_ac,
                                        bg=blanco_hueso)
         self.scr_courses.pack()
