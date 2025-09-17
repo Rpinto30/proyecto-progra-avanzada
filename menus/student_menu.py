@@ -1,9 +1,10 @@
 import tkinter as tk
-from graphic_tools import Window, Page, ScrollFrame
+from graphic_tools import Window, Page, PagePrincipal, ScrollFrame
 from clases_internas.usuarios import Student
 from data.data_base import data
+from tkinter import PhotoImage
 
-#root = Window('Test', (1920,1080))
+root = Window('Test', (1920,1080))
 
 CL_BG = '#669BBC'
 CL_BG_L = '#669BBC'
@@ -12,7 +13,7 @@ CL_BG_LT = '#4F3A92'
 CL_BG_LM = '#4D18B0'
 CL_BD_LM = '#071E29'
 CL_BG_SCR_L = '#4B73CE'
-
+CL_BG_RB = '#1A7789'
 
 CL_SCROLL_BG = '#2E2E39'
 CL_SCOLL = '#FFFFFF'
@@ -23,7 +24,7 @@ FG_LT = '#FDF0D5'
 
 WID_F_L = 480
 
-class StudentMenu(Page):
+class StudentMenu(PagePrincipal):
     def __init__(self, master, student:Student, parent, **kwargs):
         super().__init__(master, bg=CL_BG, **kwargs)
         #LEFT FRAME
@@ -63,10 +64,20 @@ class StudentMenu(Page):
         self.__f_info_right.pack_propagate(False)
         self.__f_info_right.pack(side='right')
 
-        tk.Button(self.__f_info_right,text='Salir', command=lambda :self.change_page(parent)).pack(side="right")
+        self.__f_top_right = tk.Frame(self.__f_info_right, width=(1920 - WID_F_L), height=200, bg=CL_BG_RB)
+        self.__f_top_right.pack_propagate(False)
+        self.__f_top_right.pack(side='top')
+
+        def exit_(): print('Salir')#self.change_page(parent)
+        tk.Button(self.__f_top_right, text='x', width=3, height=1, command=exit_, font=(FONT, 30, 'bold'), bg='#8292CB', relief='flat').pack(side="right", padx=50)
+
+        logo = PhotoImage(file=r'sources/Logo_iso_stu.png', width=199, height=200)
+        logo_photo = tk.Label(self.__f_top_right, image=logo, highlightthickness=0, bd=0)
+        logo_photo.image = logo
+        logo_photo.pack(side='left',padx=30)
 
 
 
-#S = StudentMenu(root, Student('Pepito', '123', 'STU123'), None)
+S = StudentMenu(root, Student('Pepito', '123', 'STU123'), None)
 
-#root.mainloop()
+root.mainloop()
