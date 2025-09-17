@@ -46,19 +46,25 @@ class MenuProfesores(PagePrincipal):
         self.c_lable_courses.create_window((wid // 2)-100, 100 // 2,
                                            window=tk.Label(self.c_lable_courses, text='Cursos', bg=azul_marino,
                                                            fg='white', font=(font, 30, 'bold')))
+        # Boton de crear curso
+        tk.Button(self.__barra_profesor, text='Crear curso', font=(font, 30), anchor='center', width=14, fg=fg,
+                  bg=azul_claro).pack(fill='x', side='bottom')
 
         self.scr_courses = ScrollFrame(self.__barra_profesor,
-                                       width=wid, height=(1080 - 450), vbar_position='left',
+                                       width=wid, height=(1080 - 200), vbar_position='left',
                                        cl_bars_bg=scroll_bg, cl_bars_des=scroll, cl_bars_act=scroll_ac,
                                        bg=blanco_hueso)
         self.scr_courses.pack()
 
+
         self.__barra_materia_boton = tk.Button(self.__barra_profesor, text="Curso", bg=azul_marino, fg=fg, font=font)
         self.__barra_materia_boton.pack(fill="x", pady='250')
 
+        # Frame de arriba
         self.__frame_info = tk.Frame(self.__frame_profesor,  width=1920 - 400, height=150, bg=azul_marino)
         self.__frame_info.pack_propagate(False)
         self.__frame_info.pack()
+
 
         for course_id in data.instructors[user.user_id]['courses']:
             scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg= 'yellow', highlightthickness=2, highlightbackground='pink')
