@@ -7,7 +7,7 @@ from tkinter import PhotoImage
 
 azul_claro = '#669BBC'
 azul_marino = '#003949'
-blanco_hueso = '#FDF0D5'
+blanco_hueso = '#E1E2D5'
 
 scroll_bg = '#2E2E39'
 scroll = '#FFFFFF'
@@ -23,20 +23,35 @@ class MenuProfesores(PagePrincipal):
     def __init__(self, master, user:Instructor  ,**kwargs):
         super().__init__(master, **kwargs)
 
-        self.__barra_profesor = tk.Frame(self, width=700, height=1080, bg=azul_claro)
+        self.__barra_profesor = tk.Frame(self, width=400, height=1080, bg=azul_claro)
         self.__barra_profesor.pack_propagate(False)
         self.__barra_profesor.pack(side='left')
-        self.__frame_profesor = tk.Frame(self, width=1920-700, height=1080, bg=blanco_hueso)
+        self.__frame_profesor = tk.Frame(self, width=1920-400, height=1080, bg=blanco_hueso)
         self.__frame_profesor.pack_propagate(False)
         self.__frame_profesor.pack(side='right')
 
-        frame__colocar_info = tk.Frame(self.__barra_profesor, bg='black')
+        frame__colocar_info = tk.Frame(self.__barra_profesor, bg=azul_claro)
         frame__colocar_info.pack(pady=10)
-        tk.Label(frame__colocar_info, text='Profesor', font=(font, 60, 'bold'), anchor='w', bg='black', fg=fg).pack(padx=35,
+        tk.Label(frame__colocar_info, text='Profesor', font=(font, 60, 'bold'), anchor='w', bg=azul_claro, fg=fg).pack(padx=35,
                                                                                                                fill='x',
                                                                                                                pady=10)
-        tk.Label(frame__colocar_info, text=f'{user.name} ({user.user_id})', font=(font, 25, 'bold'), anchor='w', bg='black',
+        tk.Label(frame__colocar_info, text=f'{user.name} ({user.user_id})', font=(font, 25, 'bold'), anchor='w', bg=azul_claro,
                  fg=fg).pack(padx=35, fill='x')
+
+        self.c_lable_courses = tk.Canvas(self.__barra_profesor, width=wid, height=100, bg=blanco_hueso, highlightthickness=0,
+                                         bd=0)
+        self.c_lable_courses.create_line(10, 0, wid - 10, 0, fill='black', width=10)
+        self.c_lable_courses.create_line(10, 100, wid - 10, 100, fill='black', width=10)
+        self.c_lable_courses.pack()
+        self.c_lable_courses.create_window(wid // 2, 100 // 2,
+                                           window=tk.Label(self.c_lable_courses, text='Cursos', bg=blanco_hueso,
+                                                           fg='black', font=(font, 30, 'bold')))
+
+        self.scr_courses = ScrollFrame(self.__barra_profesor,
+                                       width=wid, height=(1080 - 350), vbar_position='left',
+                                       cl_bars_bg=scroll_bg, cl_bars_des=scroll, cl_bars_act=scroll_ac,
+                                       bg=blanco_hueso)
+        self.scr_courses.pack()
 
         self.__barra_materia_boton = tk.Button(self.__barra_profesor, text="Curso", bg=azul_marino, fg=fg, font=font)
         self.__barra_materia_boton.pack(fill="x", pady='250')
@@ -44,6 +59,7 @@ class MenuProfesores(PagePrincipal):
         self.__frame_info = tk.Frame(self.__frame_profesor,  width=wid, height=250, bg=azul_marino)
         self.__frame_info.pack_propagate(False)
         self.__frame_info.pack()
+
 
         # frame colocar info
 
