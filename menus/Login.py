@@ -117,6 +117,24 @@ class Login(PagePrincipal):
 
             self.button_login.pack(pady=80, padx=30)
 
+        def forgot_password():
+            self.forgot_level = tk.Toplevel(self.master, width=900, height=700, bg='blue')
+            self.forgot_level.resizable(False, False)
+            self.forgot_level.pack_propagate(False)
+
+            forgot = PhotoImage(file=r'sources/olvido_de_contras.gif', width=900, height=700)
+            forgot_photo = tk.Label(self.forgot_level, image=forgot)
+            forgot_photo.image = forgot
+            forgot_photo.pack()
+
+        def show_creators():
+            self.show_level = tk.Toplevel(self.master, width=1300, height=900, bg='blue')
+            self.show_level.resizable(False, False)
+            self.show_level.pack_propagate(False)
+
+
+
+
 
 
 
@@ -140,7 +158,7 @@ class Login(PagePrincipal):
                                                   _padx=40, width=450,  bg='white')
 
         self.b_forgot,self.b_creaete = pack_create_line(self.f_izq,
-                                                        tk.Button, {'text':'Olvido de contraseña', "font":('Arial',15, 'bold'), "fg":'red', "width":20, "highlightthickness":0, "bd":0, "bg":'white', "cursor":'hand2'},
+                                                        tk.Button, {'text':'Olvido de contraseña', "font":('Arial',15, 'bold'), "fg":'red', "width":20, "highlightthickness":0, "bd":0, "bg":'white', "cursor":'hand2', 'command':forgot_password},
                                                         tk.Button,
                                                         {'text': 'Crear Cuenta', "font": ('Arial', 15, 'bold'), "fg": 'red', "width": 20, "highlightthickness": 0, "bd": 0,"bg": 'white', "cursor": 'hand2', 'command': create_user},
                                                         width=720, height=40, _pady=60, bg='white')
@@ -149,6 +167,8 @@ class Login(PagePrincipal):
         self.inf_text = 'Portal academico de Universidad RAR de Quetzaltenango'
         self.l_inf = tk.Label(self.f_izq, text=self.inf_text, font=('Arial', 15, 'bold'), fg='gray', bg='white')
         self.l_inf.pack(pady=10, padx=30)
+        self.meet = tk.Button(self.f_izq,text='Empresarios', font=('Arial', 30, 'bold'), fg='white', width=20, bg='white', activebackground='white', cursor='hand2', command=show_creators)
+        self.meet.pack(pady=20, padx=30)
 
         self.clear_widgest = [self.e_password, self.e_user]
 
