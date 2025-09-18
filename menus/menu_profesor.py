@@ -67,10 +67,6 @@ class MenuProfesores(PagePrincipal):
 
 
 
-        for course_id in data.instructors[user.user_id]['courses']:
-            scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg= 'yellow', highlightthickness=2, highlightbackground='pink')
-            self.scr_courses.pack_on_scroll(scroll_curso, pady=10, fill='x',padx=2)
-            tk.Button(scroll_curso, text=f"{str(data.courses[course_id]['course_name'])} \n {str(course_id)}" , font=(font, 35), anchor='center', width=14, bg='white').pack(fill='x')
 
 
         self.menu, self.id_curso = None, ''
@@ -81,18 +77,20 @@ class MenuProfesores(PagePrincipal):
                 self.__frame_info.pack()
                 self.id_curso = id_curso
         # Verifica que hayan cursos asignados
-        if len(data.user[user.user_id]['courses']) > 0:
-            for courses_id in data.students[user.user_id]['courses']:
+        if len(data.instructors[user.user_id]['courses']) > 0:
+            for courses_id in data.instructors[user.user_id]['courses']:
+
                 scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg=blanco_hueso, highlightthickness=3,
                                            highlightbackground='white')
                 self.scr_courses.pack_on_scroll(scroll_curso, pady=10, fill='x', padx=2)
-                b = tk.Button(scroll_curso, text=str(data.courses[courses_id]['course_name']), font=(font, 39),
-                              width=15, bg=blanco_hueso)
-                b.pack(fill='x')
+                boton_scroll = tk.Button(scroll_curso, text=str(data.courses[courses_id]['course_name']),
+                                         font=(font, 39),
+                                         width=12, bg=blanco_hueso)
+                boton_scroll.pack(fill='x')
                 tk.Label(scroll_curso,
                          text=f"{str(courses_id)} - {str(data.instructors[data.courses[courses_id]['teacher']]['name'])}",
-                         font=(font, 17), anchor='center', bg='black').pack(fill='x')
-                b.config(command=lambda c=courses_id: entrada_menu(c))
+                         font=(font, 17), anchor='center', bg='white').pack(fill='x')
+                boton_scroll.config(command=lambda c=courses_id: entrada_menu(c))
         else:
             scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg=blanco_hueso, highlightthickness=3, highlightbackground='white')
             self.scr_courses.pack_on_scroll(scroll_curso, fill='x', padx=7, pady=20)
