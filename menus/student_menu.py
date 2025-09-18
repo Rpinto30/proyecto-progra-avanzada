@@ -1,11 +1,8 @@
 import tkinter as tk
-from graphic_tools import Window, Page, PagePrincipal, ScrollFrame
+from graphic_tools import Page, ScrollFrame
 from clases_internas.usuarios import Student
-from clases_internas.cursos import Courses
 from data.data_base import data
 from tkinter import PhotoImage
-
-root = Window('Test', (1920,1080))
 
 CL_BG = '#669BBC'
 CL_BG_L = '#669BBC'
@@ -26,7 +23,7 @@ FG_LT = '#FDF0D5'
 
 WID_F_L = 480
 
-class StudentMenu(PagePrincipal):
+class StudentMenu(Page):
     def __init__(self, master, student:Student, parent, **kwargs):
         super().__init__(master, bg=CL_BG, **kwargs)
         #LEFT FRAME
@@ -54,8 +51,54 @@ class StudentMenu(PagePrincipal):
         self.scr_courses = ScrollFrame(self.__f_info_left,
                                        width=WID_F_L, height=(1080-500), vbar_position='left', cl_bars_bg=CL_SCROLL_BG, cl_bars_des=CL_SCOLL, cl_bars_act=CL_SCOLL_AC, bg=CL_BG_SCR_L)
         self.scr_courses.pack()
+
+        def create_user():
+            self.top_level = tk.Toplevel(self.master, width=1000, height=700, bg='white')
+            self.top_level.resizable(False,False)
+            #self.top_level.pack_propagate(False)  # PARA EVITAR QUE SE DEFORME AL HACER UN PACK
+            self.top_level.grab_set()
+
+            tk.Label(self.top_level, text='Ingresa el codigo de un curso para asignarte:', font=('Arial', 30, 'bold'), bg='white').pack(pady=30)
+            inf = tk.Label(self.top_level, text='(El codigo debe haber sido dado por tu instructor)', font=('Arial', 15, 'bold'), bg='white')
+            inf.pack(pady=10)
+            e_ = tk.Entry(self.top_level,  font=('Arial', 45, 'bold'))
+            e_.pack(pady=20)
+
+            def asing():
+                s = Student(student.name, student.password, student.user_id)
+                if e_.get().strip() != '':
+                    if str(e_.get()) in data.courses:
+                        s.course_register(str(e_.get()))
+                        teacher = data.courses[str(e_.get())]['teacher']
+                        inf.config(text=f"Se asigno al curso {data.courses[str(e_.get())]} impartido por {data.instructors[teacher]['name']}")
+                    else:
+                        inf.config(text='Lo siento, no ecnontramos ningun curso')
+                else: inf.config(text='La entrada no puede estar vacía!!')
+
+                if len(data.students[student.user_id]['courses']) > 0:
+                    for w in self.scr_courses.scr_frame.winfo_children(): w.pack_forget()
+                    for courses_id in data.students[student.user_id]['courses']:
+                        f_course_scroll = tk.Frame(self.scr_courses.scr_frame, bg=CL_BG_SCR_L, highlightthickness=3,
+                                                   highlightbackground='#0D0C2D')
+                        self.scr_courses.pack_on_scroll(f_course_scroll, pady=10, fill='x', padx=2)
+                        b = tk.Button(f_course_scroll, text=str(data.courses[courses_id]['course_name']), cursor='hand2',
+                                      font=(FONT, 39), width=15, bg=CL_BG_BT_C)
+                        b.pack(fill='x')
+                        tk.Label(f_course_scroll,
+                                 text=f"{str(courses_id)} - {str(data.instructors[data.courses[courses_id]['teacher']]['name'])}",
+                                 font=(FONT, 17), anchor='center', bg=CL_BG_SCR_L).pack(fill='x')
+                        b.config(command=lambda c=courses_id: entry_menu_course(c))
+
+
+            tk.Button(self.top_level, text='Asignarse!', bg='red', fg='white',font=('Arial', 30, 'bold'), cursor='hand2', command=asing).pack(pady=10)
+
+            def exit_top():
+                self.top_level.destroy()
+            self.top_level.protocol("WM_DELETE_WINDOW", exit_top)
+
+
         #BOTON ASIGNARSE
-        tk.Button(self.__f_info_left, text='Asignarse a curso', font=(FONT, 37, 'bold')).pack(pady=15)
+        tk.Button(self.__f_info_left, text='Asignarse a curso', font=(FONT, 37, 'bold'), command=create_user, cursor='hand2').pack(pady=15)
         #SCROLL BOTONES
 
         self.__f_info_right = tk.Frame(self, width=(1920 - WID_F_L), height=1080, bg=CL_BG_R)
@@ -74,7 +117,7 @@ class StudentMenu(PagePrincipal):
             for courses_id in data.students[student.user_id]['courses']:
                 f_course_scroll = tk.Frame(self.scr_courses.scr_frame, bg=CL_BG_SCR_L,highlightthickness=3, highlightbackground='#0D0C2D')
                 self.scr_courses.pack_on_scroll(f_course_scroll, pady=10, fill='x',padx=2)
-                b = tk.Button(f_course_scroll, text=str(data.courses[courses_id]['course_name']), font=(FONT,39), width=15, bg=CL_BG_BT_C)
+                b = tk.Button(f_course_scroll, text=str(data.courses[courses_id]['course_name']), font=(FONT,39), width=15, bg=CL_BG_BT_C, cursor='hand2')
                 b.pack( fill='x')
                 tk.Label(f_course_scroll, text=f"{str(courses_id)} - {str(data.instructors[data.courses[courses_id]['teacher']]['name'])}", font=(FONT, 17), anchor='center',bg=CL_BG_SCR_L).pack(fill='x')
                 b.config(command = lambda c=courses_id: entry_menu_course(c))
@@ -89,8 +132,8 @@ class StudentMenu(PagePrincipal):
         self.__f_top_right.pack_propagate(False)
         self.__f_top_right.pack(side='top')
 
-        def exit_(): print('Salir')#self.change_page(parent)
-        tk.Button(self.__f_top_right, text='→', width=3, height=0, command=exit_, font=(FONT, 50, 'bold'), bg='#8292CB', relief='flat').pack(side="right", padx=50)
+        def exit_(): self.change_page(parent)
+        tk.Button(self.__f_top_right, text='→', width=3, height=0, command=exit_, font=(FONT, 50, 'bold'), bg='#8292CB', relief='flat', cursor='hand2').pack(side="right", padx=50)
 
         logo = PhotoImage(file=r'sources/Logo_iso_stu.png', width=199, height=200)
         logo_photo = tk.Label(self.__f_top_right, image=logo, highlightthickness=0, bd=0)
@@ -144,10 +187,3 @@ class StudentMenuCourse(tk.Frame):
                     e.config(state='disabled', height= int(e.index('end-1c').split('.')[0]))
                     e.pack(fill='x', anchor='w', expand=1, side='bottom', padx=20)
             self.f_down.pack_on_scroll(frame_publish, padx=50, pady=30)
-
-
-
-
-S = StudentMenu(root, Student('Pepito', '123', 'STU123'), None)
-
-root.mainloop()

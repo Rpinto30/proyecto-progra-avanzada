@@ -52,7 +52,7 @@ class Instructor(User):
 
     def create_course(self, entry_name:str):
         if entry_name.strip() != "":
-            course = Courses(entry_name, self)
+            course = Courses(entry_name)
             coursedict = {
                 "course_name": course.course_name,
                 "teacher": self.user_id,
