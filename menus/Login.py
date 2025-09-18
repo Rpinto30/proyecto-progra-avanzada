@@ -1,6 +1,7 @@
 import tkinter as tk
+from turtledemo.penrose import inflatedart
 from clases_internas.usuarios import Instructor, Student
-from student_menu import StudentMenu
+#from student_menu import StudentMenu
 from menus.graphic_tools import Window, PagePrincipal, pack_create_line
 from data.data_base import data
 from tkinter import PhotoImage
@@ -9,7 +10,7 @@ from tkinter import PhotoImage
 root = Window('Ventana', (1920, 1080))
 
 class Login(PagePrincipal):
-    def __init__(self, master,   **kwargs):
+    def __init__(self, master,  **kwargs):
         super().__init__(master=master, bg='red', **kwargs)
         self.f_der = tk.Frame
         self.f_top = tk.Frame
@@ -53,8 +54,8 @@ class Login(PagePrincipal):
                 self.b_login.config(state='normal')
                 self.l_inf.config(text=self.inf_text)
 
-                self.change_page(StudentMenu(self.master, parent=self,
-                                             student=Student(data.students[str(self.e_user.get())]['name'],self.e_password.get(), str(self.e_user.get()))))
+                #self.change_page(StudentMenu(self.master, parent=self,
+                #                             student=Student(data.students[str(self.e_user.get())]['name'],self.e_password.get(), str(self.e_user.get()))))
 
             if str(self.e_user.get())[:3] == 'IST':
                 if str(self.e_user .get()) in data.instructors:
@@ -74,6 +75,50 @@ class Login(PagePrincipal):
                 else: show_error()
 
             else: show_error('Error: No se pudo iniciar sesión\nCódigo no valido')
+
+
+        def create_user():
+            self.top_level = tk.Toplevel(self.master, width=900, height=700, bg='white')
+            self.top_level.resizable(False,False)
+            self.top_level.pack_propagate(False)  # PARA EVITAR QUE SE DEFORME AL HACER UN PACK
+            txt = tk.Label(self.top_level, text='Crear usuario', font=('Arial', 25, 'bold'), fg='black', bg='red')
+            txt.pack()
+
+
+            v = tk.StringVar(value='1')  # Variable global de los RadioButton
+            tk.Radiobutton(self.top_level, text='Estudiante', value='1', variable=v, font=('Arial', 17, 'bold'), bg='white').pack(ipady=5)
+            tk.Radiobutton(self.top_level, text='Instructor', value='2', variable=v, font=('Arial', 17, 'bold'), bg='white').pack(ipady=5)
+
+            self.f_toplevel = tk.Frame(self.top_level, bg='white')
+            self.f_toplevel.pack()
+
+            e_name = tk.Entry(state='normal')
+            e_password = tk.Entry(state='normal')
+
+            if v.get() == '1': #Estudiante
+                i = Student(e_name.get(), e_password.get())
+                i.create_student(e_name.get(), e_password.get())
+                #self.inf.config(text=f'Se agregó {e_name.get()}, su codigo de estudiante es {i.user_id}')
+            elif v.get() == '2': #Instructor
+                i =Instructor(e_name.get(), e_password.get())
+                i.create_instructor(e_name.get(), e_password.get())
+                #self.inf.config(text=f'Se agregó {e_name.get()}, su codigo de docente es {i.user_id}')
+
+            l_name, e_name = pack_create_line(self.f_toplevel, tk.Label, {'text': 'Nombre:      ',  'fg':'black', 'font':('Arial', 30, 'bold'), 'justify':'left','bg':'white'},
+                                               tk.Entry, {'width':20, 'font':e_front, 'relief':"solid", 'bg':'white'},
+                                               _pady=60 , _padx=42,  bg='white')
+
+            l_passw, e_password = pack_create_line(self.f_toplevel, tk.Label, {'text': 'Contraseña:',  'fg':'black', 'font':('Arial', 30, 'bold'), 'justify':'left','bg':'white'},
+                                               tk.Entry, {'width':20, 'font':e_front, 'relief':"solid"},
+                                               _pady=60 , _padx=42,  bg='white')
+
+            self.button_login = tk.Button(self.f_toplevel, text='Crear', font=('Arial', 30, 'bold'), fg='black', width=20,
+                                     bg='red', activebackground='#FF9EA2', cursor='hand2', relief='solid',)
+
+            self.button_login.pack(pady=80, padx=30)
+
+
+
 
         # Labels
         l_front, e_front = ('Arial', 12, 'bold'), ('Arial', 30)
@@ -97,9 +142,8 @@ class Login(PagePrincipal):
         self.b_forgot,self.b_creaete = pack_create_line(self.f_izq,
                                                         tk.Button, {'text':'Olvido de contraseña', "font":('Arial',15, 'bold'), "fg":'red', "width":20, "highlightthickness":0, "bd":0, "bg":'white', "cursor":'hand2'},
                                                         tk.Button,
-                                                        {'text': 'Crear Cuenta', "font": ('Arial', 15, 'bold'), "fg": 'red', "width": 20, "highlightthickness": 0, "bd": 0,"bg": 'white', "cursor": 'hand2'},
-                                                        width=720, height=40, _pady=60, bg='white'
-        )
+                                                        {'text': 'Crear Cuenta', "font": ('Arial', 15, 'bold'), "fg": 'red', "width": 20, "highlightthickness": 0, "bd": 0,"bg": 'white', "cursor": 'hand2', 'command': create_user},
+                                                        width=720, height=40, _pady=60, bg='white')
 
         self.b_login.pack(pady=80, padx=30)
         self.inf_text = 'Portal academico de Universidad RAR de Quetzaltenango'

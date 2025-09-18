@@ -181,7 +181,7 @@ class ScrollFrame(tk.Frame):
     def scr_frame(self):return self.__sub_frame
 
 class Tabla(ScrollFrame):
-    def __init__(self, master, matrix:list,
+    def __init__(self, master:Window | tk.Misc| tk.Frame, matrix:list,
                  vbar_position=None, hbar_position=None,
                  cell_width=10, cell_height=1,
                  font_size = 12, propagate_width:int=0, propagate_height:int=0,
@@ -330,6 +330,11 @@ class Tabla(ScrollFrame):
             if index == n_row%self.__colums:
                 row.config(width=width_)
 
+    def confi_cell(self, index=(0, 0)):
+        for n_row, row in enumerate(self.__table.winfo_children(), 0):
+            if index[1] == n_row%self.__colums and n_row//self.__colums == index[0]:
+                row.config( fg="red")
+                print(row.cget("text"))
 
     def reload(self, matrix):
         self.matrix = matrix
