@@ -94,8 +94,14 @@ class MenuProfesores(PagePrincipal):
                          font=(font, 17), anchor='center', bg='black').pack(fill='x')
                 b.config(command=lambda c=courses_id: entrada_menu(c))
         else:
+            scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg=blanco_hueso, highlightthickness=3, highlightbackground='white')
+            self.scr_courses.pack_on_scroll(scroll_curso, fill='x', padx=7, pady=20)
+            tk.Label(scroll_curso,
+                     text='No hay cursos asignados ☹ \n ¡Recuerda crear un curso!',
+                     font=(font, 25, 'bold')).pack()
 
-        def exit_(): print('Salir')
+        def exit_():
+            print('Salir')
         tk.Button(self.__frame_info, text='x', width=3, height=1, command=exit_, font=(font, 20, 'bold'), bg=azul_claro, relief='flat').pack(side="right", padx=50)
 
     # Me hace falta poner el logo
