@@ -97,7 +97,7 @@ class MenuProfesores(PagePrincipal):
             tk.Label(scroll_curso,
                      text='No hay cursos asignados ☹ \n ¡Recuerda crear un curso!',
                      font=(font, 25, 'bold')).pack()
-
+#
         def exit_():
             print('Salir')
         tk.Button(self.__frame_info, text='x', width=3, height=1, command=exit_, font=(font, 20, 'bold'), bg=azul_claro, relief='flat').pack(side="right", padx=50)
