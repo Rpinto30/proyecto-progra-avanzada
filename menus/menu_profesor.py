@@ -72,17 +72,14 @@ class MenuProfesores(PagePrincipal):
             self.scr_courses.pack_on_scroll(scroll_curso, pady=10, fill='x',padx=2)
             tk.Button(scroll_curso, text=f"{str(data.courses[course_id]['course_name'])} \n {str(course_id)}" , font=(font, 35), anchor='center', width=14, bg='white').pack(fill='x')
 
-            '''
-            tk.Label(scroll_curso, text=str(data.courses[course_id]['course_name']), font=(font, 39), anchor='center', width=14, bg='black').pack(fill='x', padx=10)
-            tk.Label(scroll_curso, text=f'{str(course_id)} - {str(data.instructors[data.courses[course_id]['teacher']]['name'])}', font=(font, 14), anchor='center', width=39, bg='black').pack(fill='x', padx=10)
-            '''
 
-        def entrada_menu(id_course):
-            if self.id_in_course != id_course:
+        self.menu, self.id_curso = None, ''
+        def entrada_menu(id_curso):
+            if self.id_curso != id_curso:
                 if self.menu is not None: self.menu.pack_forget()
-                self.menu = MenuProfesores(self, id_course, user)
+                self.menu = MenuProfesores(self, id_curso, user)
                 self.__frame_info.pack()
-                self.id_in_course = id_course
+                self.id_curso = id_curso
 
         def exit_(): print('Salir')
         tk.Button(self.__frame_info, text='x', width=3, height=1, command=exit_, font=(font, 20, 'bold'), bg=azul_claro, relief='flat').pack(side="right", padx=50)
