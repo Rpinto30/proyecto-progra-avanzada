@@ -1,7 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from math import floor
-from tkinter import PhotoImage
 
 class Window(tk.Tk):
     # DOCSTRING: https://www.datacamp.com/tutorial/docstrings-python
@@ -181,13 +180,13 @@ class ScrollFrame(tk.Frame):
     def scr_frame(self):return self.__sub_frame
 
 class Tabla(ScrollFrame):
-    def __init__(self, master:Window | tk.Misc| tk.Frame, matrix:list,
+    def __init__(self, master:Window | tk.Misc| tk.Frame, matrix:list, bg:str,
                  vbar_position=None, hbar_position=None,
                  cell_width=10, cell_height=1,
                  font_size = 12, propagate_width:int=0, propagate_height:int=0,
                  borderwidth:int= 1,
                  color_header:str='#A9B1D1', color_first_colum:str='',
-                 color_first:str='', color_table:str='', cell_command=None, select_mode=None,
+                 color_first:str='', color_table:str='', cell_command=None, select_mode=None, cursor ='arrow',
                  **kwargs):
         """
         Crea una tabla con información que se le pase, necesita una matriz
@@ -213,7 +212,7 @@ class Tabla(ScrollFrame):
         :param color_table: Opcional, el color general de la tabla
         :param kwargs:
         """
-        super().__init__(master, vbar_position, hbar_position,**kwargs)
+        super().__init__(master, vbar_position, hbar_position, bg=bg,**kwargs)
         self.master = master
         self.matrix = matrix
         self.vbar_position = vbar_position
@@ -231,6 +230,7 @@ class Tabla(ScrollFrame):
 
         self.cell_command = cell_command
         self.select_mode = select_mode
+        self.cursor = cursor
         self.__create_table(self.matrix)
 
     def __create_table(self, matrix):
@@ -249,7 +249,7 @@ class Tabla(ScrollFrame):
                         font=("Arial", self.font_size),
                         text=self.matrix[i][j],
                         relief='solid',
-                        borderwidth=self.borderwidth
+                        borderwidth=self.borderwidth, cursor=self.cursor
                     )
                 except IndexError:
                     e = tk.Label(
@@ -258,12 +258,12 @@ class Tabla(ScrollFrame):
                         font=("Arial", self.font_size),
                         text=" ",
                         relief='solid',
-                        borderwidth=self.borderwidth
+                        borderwidth=self.borderwidth, cursor=self.cursor
                     )
 
                 # Tamaño fijo de la celda
+                if i == 0: e.config(cursor='arrow')
                 e.config(width=self.cell_width, height=self.cell_height)
-
                 # --- Colores ---
                 if self.color_table != '': e.config(bg=self.color_table)
                 if i == 0 and j % self.__colums == 0 and self.color_first != '':e.config(bg=self.color_first)
@@ -279,9 +279,7 @@ class Tabla(ScrollFrame):
                         else:
                             value = self.matrix[row][col]  # valor normal
                         self.cell_command(row, col, value)
-
                     e.bind("<Button-1>", handler)
-
                 e.grid(row=i, column=j)
                 row.append(e)
 
@@ -330,10 +328,16 @@ class Tabla(ScrollFrame):
             if index == n_row%self.__colums:
                 row.config(width=width_)
 
-    def confi_cell(self, index=(0, 0)):
+    def confi_fg_cell(self, index=(0, 0), color='red'):
         for n_row, row in enumerate(self.__table.winfo_children(), 0):
             if index[1] == n_row%self.__colums and n_row//self.__colums == index[0]:
-                row.config( fg="red")
+                row.config( fg=color)
+                print(row.cget("text"))
+
+    def confi_font_cell(self, index=(0, 0), font=('Arial',12)):
+        for n_row, row in enumerate(self.__table.winfo_children(), 0):
+            if index[1] == n_row%self.__colums and n_row//self.__colums == index[0]:
+                row.config(font = font)
                 print(row.cget("text"))
 
     def reload(self, matrix):

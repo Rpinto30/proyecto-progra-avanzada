@@ -79,7 +79,6 @@ class StudentMenu(PagePrincipal):
                 tk.Label(f_course_scroll, text=f"{str(courses_id)} - {str(data.instructors[data.courses[courses_id]['teacher']]['name'])}", font=(FONT, 17), anchor='center',bg=CL_BG_SCR_L).pack(fill='x')
                 b.config(command = lambda c=courses_id: entry_menu_course(c))
         else:
-            print('a')
             f_course_scroll = tk.Frame(self.scr_courses.scr_frame, bg=CL_BG_SCR_L, highlightthickness=3, highlightbackground='#0D0C2D')
             self.scr_courses.pack_on_scroll(f_course_scroll, fill='x', padx=7, pady=20)
             tk.Label(f_course_scroll, text='No hay cursos asignados :c\n¡Asignate a un curso\npara iniciar tu aventura!', font=(FONT,25,'bold')).pack()
@@ -109,7 +108,7 @@ class StudentMenuCourse(tk.Frame):
         self.f_top.pack_propagate(False)
         self.f_top.pack()
         tk.Label(self.f_top, text=f'{data.courses[course_id]['course_name']}', font=(FONT, 60, 'bold')).pack(side='left', padx=50)
-        tk.Label(self.f_top, text=f'{course_id}  -  {data.courses[course_id]['teacher']}', font=(FONT, 35, 'bold')).pack(side='right', padx=50)
+        tk.Label(self.f_top, text=f'{course_id}  -  {data.instructors[data.courses[course_id]['teacher']]['name']}', font=(FONT, 35, 'bold')).pack(side='right', padx=50)
 
         self.f_down = ScrollFrame(self, width=(1920 - WID_F_L), height=(1080-200), bg=CL_BG_C, vbar_position='right')
         self.f_down.pack_propagate(False)
@@ -144,11 +143,6 @@ class StudentMenuCourse(tk.Frame):
                     e.insert(tk.END, f"{publish['description']}")
                     e.config(state='disabled', height= int(e.index('end-1c').split('.')[0]))
                     e.pack(fill='x', anchor='w', expand=1, side='bottom', padx=20)
-                    # Hago esto para simular un boton, no sé por qué no hice boton esto desde un inicio XD
-                    frame_publish.bind("<Button-1>", lambda e: print("Hola"))
-                    frame_publish.bind("<Enter>", lambda e: frame_publish.config(cursor="hand2"))
-                    frame_publish.bind("<Leave>", lambda e: frame_publish.config(cursor=""))
-
             self.f_down.pack_on_scroll(frame_publish, padx=50, pady=30)
 
 
