@@ -105,24 +105,52 @@ class MenuProfesores(PagePrincipal):
         tk.Button(self.__frame_info, text='x', width=3, height=1, command=exit_, font=(font, 20, 'bold'), bg=azul_claro, relief='flat').pack(side="right", padx=50)
 
     # Me hace falta poner el logo
-    class CursoProfesorMenu(tk.Frame):
-        def __init__(self, master, course_id, user: Instructor, **kwargs):
-            super().__init__(master=master, width=(1920 - wid), height=(1080 - 500), bg='white', **kwargs)
-            self.pack_propagate(False)
-            self.frame_curso = tk.Frame(self, width=(1920 - wid), height=(1080 - 200 - 700), bg='red')
-            self.frame_curso.pack_propagate(False)
-            self.frame_curso.pack()
-            tk.Label(self.frame_curso, text=f"{data.courses[course_id]['cours_name']}",
-                     font=(font, 60, 'bold')).pack(side='left', padx=50)
-            tk.Label(self.frame_curso, text=f'{course_id} - {data.courses[course_id]['teacher']} ', font=(font, 35, 'bold')).pack(side='right', padx=50)
+class CursoProfesorMenu(tk.Frame):
+    def __init__(self, master, course_id, user: Instructor, **kwargs):
+        super().__init__(master=master, width=(1920 - wid), height=(1080 - 500), bg='white', **kwargs)
+        self.pack_propagate(False)
+        self.frame_curso = tk.Frame(self, width=(1920 - wid), height=(1080 - 200 - 700), bg='red')
+        self.frame_curso.pack_propagate(False)
+        self.frame_curso.pack()
+        tk.Label(self.frame_curso, text=f"{data.courses[course_id]['cours_name']}",
+                 font=(font, 60, 'bold')).pack(side='left', padx=50)
+        tk.Label(self.frame_curso, text=f'{course_id} - {data.courses[course_id]['teacher']} ', font=(font, 35, 'bold')).pack(side='right', padx=50)
 
-            self.scroll_curso = ScrollFrame(self, width=(1920 - wid), height=(1080-200), bg='black', vbar_position='right')
-            self.scroll_curso.pack_propagate(False)
-            self.scroll_curso.pack()
+        self.scroll_curso = ScrollFrame(self, width=(1920 - wid), height=(1080-200), bg='black', vbar_position='right')
+        self.scroll_curso.pack_propagate(False)
+        self.scroll_curso.pack()
 
+        for id_publish, publish in reversed(list(data.courses[course_id]['material'].items())):
+            frame_hmw = tk.Frame(self.scroll_curso.scr_frame, width=(1920 - wid -100), height=200)
+            frame_hmw.pack_propagate(False)
+            print(id_publish)
+            match id_publish[:3]:
+                case 'HOM':
+                    f_top = tk.Frame(frame_hmw)
+                    f_top.pack(side='top', fill='x')
+                    tk.Button(f_top, text=f"{publish['tittle']}", font=(font,50,'bold'), anchor='w', relief='flat', highlightthickness=0, bd=0, cursor='hand2', width=28).pack(fill='x', anchor='w', expand=1, side='left', padx=30)
+                    tk.Label(f_top, text=f"{id_publish}", font=(font,10,'bold'), anchor='e').pack(fill='x', anchor='e', expand=1, side='right', padx=30)
+                    l = tk.Frame(frame_hmw, borderwidth=10, width=(1920 - wid -100), height=2, bg='black')
+                    l.pack_propagate(False)
+                    l.pack(side='top')
+                    e = tk.Text(frame_hmw, font=(font,20,'bold'), height=3)
+                    e.insert(tk.END, f"{publish['description']}")
+                    e.config(state='disabled')
+                    e.pack(fill='x', anchor='w', expand=1, side='bottom', padx=20)
+                case 'PLH':
+                    frame_hmw.pack_propagate(True)
+                    f_top = tk.Frame(frame_hmw)
+                    f_top.pack(side='top', fill='x')
+                    tk.Label(f_top, text=f"{publish['tittle']}", font=(font, 50, 'bold'), anchor='w').pack(fill='x', anchor='w', expand=1,side='left', padx=30)
+                    tk.Label(f_top, text=f"{id_publish}", font=(font, 10, 'bold'), anchor='e').pack(fill='x', anchor='e',expand=1, side='right',padx=30)
+                    l = tk.Frame(frame_hmw, borderwidth=10, width=(1920 - wid - 100), height=2, bg='black')
+                    l.pack(side='top')
+                    e = tk.Text(frame_hmw, font=(font, 20, 'bold'), height=3)
+                    e.insert(tk.END, f"{publish['description']}")
+                    e.config(state='disabled', height= int(e.index('end-1c').split('.')[0]))
+                    e.pack(fill='x', anchor='w', expand=1, side='bottom', padx=20)
 
-
-
+        self.scroll_curso.pack_on_scroll(frame_hmw, padx=50, pady=30)
 
 men = MenuProfesores(root, user=Instructor('Milton Nimatuj', '123', 'IST'))
 root.mainloop()
