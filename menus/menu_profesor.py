@@ -80,7 +80,17 @@ class MenuProfesores(PagePrincipal):
         def exit_(): print('Salir')#self.change_page(parent)
         tk.Button(self.__frame_info, text='x', width=3, height=1, command=exit_, font=(font, 20, 'bold'), bg=azul_claro, relief='flat').pack(side="right", padx=50)
 
-
+    # Me hace falta poner el logo
+    class CursoProfesorMenu(tk.Frame):
+        def __init__(self, master, course_id, user: Instructor, **kwargs):
+            super().__init__(master=master, width=(1920 - wid), height=(1080 - 500), bg='white', **kwargs)
+            self.pack_propagate(False)
+            self.frame_curso = tk.Frame(self, width=(1920 - wid), height=(1080 - 200 - 700), bg='red')
+            self.frame_curso.pack_propagate(False)
+            self.frame_curso.pack()
+            tk.Label(self.frame_curso, text=f"{data.courses[course_id]['cours_name']}",
+                     font=(font, 60, 'bold')).pack(side='left', padx=50)
+            tk.Label(self.frame_curso, text=f'{course_id} - {data.courses[course_id]['teacher']} ', )
 
 
 men = MenuProfesores(root, user=Instructor('Milton Nimatuj', '123', 'IST'))
