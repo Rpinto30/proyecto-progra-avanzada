@@ -188,10 +188,11 @@ class CreateCourse(Page):
         def create_tarea(row, colum, value):
             if row > 0:
                 value = value[0]
-                print(data.courses[str(value)]['course_name'], data.instructors[teacher.user_id]['courses'])
                 self.change_page(
                     CrearTarea(self.master, self, teacher,
-                               Courses(data.courses[str(value)]['course_name'],  value)))
+                               Courses(data.courses[str(value)]['course_name'], data.courses[str(value)]['teacher'],
+                                       data.courses[str(value)]['students'], data.courses[str(value)]['material'],
+                                       str(value))))
 
         t = Tabla(self,check_teacher_courses(), vbar_position='left', propagate_height=5, cell_command=create_tarea, select_mode='row')
         t.pack()
