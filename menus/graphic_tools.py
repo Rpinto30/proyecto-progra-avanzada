@@ -35,8 +35,6 @@ class Window(tk.Tk):
             self.iconphoto(True, icon_image)
 
         self.update_idletasks()
-        print(self.w)
-        print(self.h)
 
     def set_principal_page(self, page):
         """
@@ -299,7 +297,6 @@ class Tabla(ScrollFrame):
 
     def __on_cell_click(self, row, col):
         valor = self.matrix[row][col]
-        #print(f"Celda presionada: fila {row}, columna {col}, valor: {valor}")
         self.click_row = row
         self.click_colum = col
 
@@ -343,31 +340,6 @@ class Tabla(ScrollFrame):
         self.matrix = matrix
         self.__table.destroy()
         self.__create_table(self.matrix)
-
-class Image(tk.Label):
-    def __init__(self, master, file:str, width_screen:int, height_screen:int, **kwargs):
-        super().__init__(master=master, **kwargs)
-        print("-"*30)
-        photo = tk.PhotoImage(file=file)
-        img_width = photo.width()
-        img_height = photo.height()
-
-        #Escala de la pantalla sobre la escala de la imagen
-        scale_w = width_screen / img_width
-        scale_h = height_screen / img_height
-        scale = min(scale_w, scale_h) #El menor para que entre en la pantalla
-
-        zoom_factor = floor(scale * 10) #No sé por qué, pero si lo hago más de 10 peta, al menos así puedo hacer escala en deciamles entre 0 y 1 (1/10, 2/10...9/10,10/10)
-        if zoom_factor < 1: zoom_factor = 1
-        photo = photo.zoom(zoom_factor, zoom_factor).subsample(10, 10)
-
-        self.image = photo
-        self.config(image=self.image)
-
-        print("Original:", img_width, img_height)
-        print("Escala aproximada:", scale)
-        print("Zoom/Subsample:", zoom_factor, "/", 10)
-        print("Nueva:", photo.width(), photo.height())
 
 
 def pack_create_line(master: tk.Frame,
