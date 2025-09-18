@@ -54,9 +54,10 @@ class StudentNotes(PagePrincipal):
                 name = data.students[student_id]['name']
                 total, note = 0, 0
                 for id_homework, homework in data.courses[course_id]['material'].items():
-                    if data.students[student_id]['material'][id_homework]['course'] == course_id:
-                        total += int(homework["points"])
-                        note += int(data.students[student_id]['material'][id_homework]["obtained_points"])
+                    if id_homework[:3] == 'HOM':
+                        if data.students[student_id]['material'][id_homework]['course'] == course_id:
+                            total += int(homework["points"])
+                            note += int(data.students[student_id]['material'][id_homework]["obtained_points"])
                 table.append([name, student_id, note, total])
         return table
 
