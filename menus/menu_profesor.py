@@ -5,6 +5,8 @@ from clases_internas.usuarios import Instructor
 from data.data_base import data
 from tkinter import PhotoImage
 
+from menus.graphic_tools import pack_create_line
+
 azul_claro = '#669BBC'
 azul_marino = '#003949'
 blanco_hueso = '#E1E2D5'
@@ -94,7 +96,20 @@ class MenuProfesores(PagePrincipal):
             tk.Label(scroll_curso,
                      text='No hay cursos asignados ☹ \n ¡Recuerda crear un curso!',
                      font=(font, 25, 'bold')).pack()
-#
+
+        def crear_curso():
+            self.create_curse = tk.Toplevel(self.master, width=1000, height=750, bg=azul_claro)
+            self.create_curse.resizable(False)
+            self.create_curse.pack_propagate(False)
+            texto_crear_curso = tk.Label(self.create_curse, text='Crear curso', font=(font, 20, 'bold'), fg='white', bg=azul_claro)
+            texto_crear_curso.pack()
+
+            nombre_curso = tk.Entry(state= 'normal')
+            nombre_curso = pack_create_line(self.create_curse, tk.Label, {'text': 'Nombre:      ',  'fg':'black', 'font':(font, 25, 'bold'), 'justify':'left','bg':'white'})
+
+            self.boton_crear = tk.Button(self.create_curse, text='Crear curso', font=(font, 25, 'bold'), fg= fg, width=wid, bg='red', activebackground='blue')
+            self.boton_crear.pack(pady=50)
+
         def exit_():
             print('Salir')
         tk.Button(self.__frame_info, text='x', width=3, height=1, command=exit_, font=(font, 20, 'bold'), bg=azul_claro, relief='flat').pack(side="right", padx=50)
