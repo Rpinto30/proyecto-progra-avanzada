@@ -89,7 +89,7 @@ class MenuProfesores(PagePrincipal):
                          font=(font, 17), anchor='center', bg='white').pack(fill='x')
                 boton_scroll.config(command=lambda c=courses_id: entrada_menu(c))
         else:
-            scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg=blanco_hueso, highlightthickness=3, highlightbackground='white')
+            scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg=blanco_hueso, highlightthickness=3, highlightbackground=blanco_hueso)
             self.scr_courses.pack_on_scroll(scroll_curso, fill='x', padx=7, pady=20)
             tk.Label(scroll_curso,
                      text='No hay cursos asignados ☹ \n ¡Recuerda crear un curso!',
@@ -102,16 +102,16 @@ class MenuProfesores(PagePrincipal):
     # Me hace falta poner el logo
 class CursoProfesorMenu(tk.Frame):
     def __init__(self, master, course_id, user: Instructor, **kwargs):
-        super().__init__(master=master, width=(1920 - wid), height=(1080 - 500), bg='white', **kwargs)
+        super().__init__(master=master, width=(1920 - 50), height=(1080 - 500), bg='red', **kwargs)
         self.pack_propagate(False)
-        self.frame_curso = tk.Frame(self, width=(1920 - wid), height=(1080 - 200 - 700), bg='red')
+        self.frame_curso = tk.Frame(self, width=(1920 - 50), height=(1080 - 200 - 700), bg=blanco_hueso)
         self.frame_curso.pack_propagate(False)
         self.frame_curso.pack()
         tk.Label(self.frame_curso, text=f"{data.courses[course_id]['course_name']}",
                  font=(font, 60, 'bold')).pack(side='left', padx=50)
         tk.Label(self.frame_curso, text=f'{course_id} - {data.courses[course_id]['teacher']} ', font=(font, 35, 'bold')).pack(side='right', padx=50)
 
-        self.scroll_curso = ScrollFrame(self, width=(1920 - wid), height=(1080-200), bg='black', vbar_position='right')
+        self.scroll_curso = ScrollFrame(self, width=(1920 - 50), height=(1080-200), bg=blanco_hueso, vbar_position='right')
         self.scroll_curso.pack_propagate(False)
         self.scroll_curso.pack()
 
