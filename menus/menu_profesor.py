@@ -66,15 +66,12 @@ class MenuProfesores(PagePrincipal):
         self.__frame_info.pack()
 
 
-
-
-
         self.menu, self.id_curso = None, ''
         def entrada_menu(id_curso):
             if self.id_curso != id_curso:
                 if self.menu is not None: self.menu.pack_forget()
-                self.menu = MenuProfesores(self, id_curso, user)
-                self.__frame_info.pack()
+                self.menu = CursoProfesorMenu(self.__frame_profesor, id_curso, user)
+                self.menu.pack()
                 self.id_curso = id_curso
         # Verifica que hayan cursos asignados
         if len(data.instructors[user.user_id]['courses']) > 0:
@@ -110,7 +107,7 @@ class CursoProfesorMenu(tk.Frame):
         self.frame_curso = tk.Frame(self, width=(1920 - wid), height=(1080 - 200 - 700), bg='red')
         self.frame_curso.pack_propagate(False)
         self.frame_curso.pack()
-        tk.Label(self.frame_curso, text=f"{data.courses[course_id]['cours_name']}",
+        tk.Label(self.frame_curso, text=f"{data.courses[course_id]['course_name']}",
                  font=(font, 60, 'bold')).pack(side='left', padx=50)
         tk.Label(self.frame_curso, text=f'{course_id} - {data.courses[course_id]['teacher']} ', font=(font, 35, 'bold')).pack(side='right', padx=50)
 
