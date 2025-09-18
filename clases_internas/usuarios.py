@@ -122,6 +122,7 @@ class Student(User):
             data.save_data("courses")
             data.save_data("students")
             for id_, values in data.courses[course_id]['material'].items():
+                print(values)
                 if id_ not in data.students[self.user_id]['material']:
                     homeworkdict = {
                         "tittle": values['tittle'],

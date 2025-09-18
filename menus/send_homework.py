@@ -1,21 +1,19 @@
 import tkinter as tk
-from graphic_tools import Window, Page, PagePrincipal, ScrollFrame, Tabla
+from graphic_tools import Page, Tabla
 from clases_internas.usuarios import Student
 from clases_internas.cursos import Courses
-from clases_internas.material import Homework
 from data.data_base import data
 from tkinter import PhotoImage
 from tkinter import filedialog
 from tkinter import messagebox
 import os
 
-root = Window('Test_send', (1920,1080))
 CL_BG = '#eae2b7'
 CL_BG_TOP = '#f77f00'
 CL_BG_SEND = '#fcbf49'
 FONT = 'Arial'
 
-class SendHomework(PagePrincipal):
+class SendHomework(Page):
     def __init__(self, master, student:Student, course: Courses, material_id, parent, **kwargs):
         super().__init__(master, bg=CL_BG, **kwargs)
 
@@ -60,7 +58,7 @@ class SendHomework(PagePrincipal):
         if data.students[student.user_id]['material'][material_id]['obtained_points'] == 0: self.matri[1][1] = 'No calificado'
         else: self.matri[1][1] = 'Calificado'
 
-        self.table = Tabla(self.f_left_info, self.matri, font_size=25,cell_width=18, cell_height=2, color_table='#CFE4EC', color_header='#669BBC', borderwidth=3)
+        self.table = Tabla(self.f_left_info, self.matri, font_size=25,cell_width=18, cell_height=2, color_table='#CFE4EC', color_header='#669BBC', borderwidth=3, bg='white')
         self.table.pack(pady=50)
 
         self.f_right_info = tk.Frame(self.f_down, width=800, height=700, bg=CL_BG)
@@ -141,6 +139,3 @@ class SendHomework(PagePrincipal):
         if self.homw != '':
             valid_file(self.homw)
             self.send.config(state='disabled')
-
-s = SendHomework(root, Student('Pepito', '123', 'STU123'), Courses('Programación','SUB4354'), 'HOM4',parent= None)
-root.mainloop()

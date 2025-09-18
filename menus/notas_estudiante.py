@@ -1,15 +1,12 @@
 import tkinter as tk
 from clases_internas.usuarios import Student
-from menus.graphic_tools import Window, PagePrincipal, pack_create_line
+from menus.graphic_tools import Page
 from data.data_base import data
 from tkinter import PhotoImage
-from tkinter.ttk import Scrollbar
 from graphic_tools import Tabla
 
-root = Window('Ventana', (1920, 1080))
 
-
-class StudentNotes(PagePrincipal):
+class StudentNotes(Page):
     def __init__(self, master, student:Student, parent,  **kwargs):
         super().__init__(master=master, bg='#007CFF', **kwargs)
         self.student = student
@@ -23,10 +20,7 @@ class StudentNotes(PagePrincipal):
         self.f_main.pack(side="right")
 
         self.f_table = Tabla(self.f_main, matrix=self.check_note(), propagate_width=3, cell_width=50, cell_height=3,
-                             color_table='white', color_header='#8EE7FF', vbar_position='left')
-        #self.f_table.confi_colum(index=0, width_=30)
-        #self.f_table.confi_colum(index=1, width_=30)
-        #self.f_table.confi_colum(index=2, width_=30)
+                             color_table='white', color_header='#8EE7FF', vbar_position='left', bg='white')
         self.f_table.pack(side='left', fill='y')
 
 
@@ -35,11 +29,21 @@ class StudentNotes(PagePrincipal):
         logo.image = photo
         logo.pack()
 
-        self.b_exit = tk.Button(self.f_main, text='Salir', font=('Arial', 30, 'bold'), fg='black', width=20, bg='red', activebackground='#FF9EA2', cursor='hand2', relief='solid')
+        logo = PhotoImage(file=r'sources/Logo_iso_stu_NOTES2.png', width=400, height=400)
+        logo_photo = tk.Label(self.f_main, image=logo, highlightthickness=0, bd=0)
+        logo_photo.image = logo
+        logo_photo.pack(side='top', padx=30, pady=30)
+
+        self.l = tk.Label(self.f_main,
+                          text='Los grandes esfuerzos\ntraen grandes\nrecompensas',
+                          font=('Arial', 30, 'bold'), fg='#24105F', width=20, bg='#FFD09F')
+        self.l.pack(side="top", pady=50)
+
+        def exit_notes(): self.change_page(parent)
+        self.b_exit = tk.Button(self.f_main, text='Salir', font=('Arial', 30, 'bold'), fg='black', width=20, bg='red', activebackground='#FF9EA2', cursor='hand2', relief='solid', command=exit_notes)
         self.b_exit.pack(side="bottom")
 
-        def exit_notes():
-            self.change_page(parent)
+
 
 
     def check_note(self):
@@ -54,12 +58,6 @@ class StudentNotes(PagePrincipal):
             table.append([data.courses[courses_id]["course_name"], note, total])
         return table
 
-
-
-
-
-student = StudentNotes(root, Student('Pepito', '123', 'STU123'), None)
-root.mainloop()
 
 
 

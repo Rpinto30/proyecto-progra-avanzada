@@ -1,14 +1,13 @@
 import tkinter as tk
-from graphic_tools import Window, Page, PagePrincipal, ScrollFrame, Tabla
-from clases_internas.usuarios import Student
+
+from clases_internas.usuarios import Instructor
+from graphic_tools import Page, Tabla
 from clases_internas.cursos import Courses
 from data.data_base import data
 from tkinter import PhotoImage
-from tkinter import filedialog
+from ranking_profesor import StudentNotes
 from tkinter import messagebox
-import os
 
-root = Window('Test_send', (1920,1080))
 CL_BG = '#eae2b7'
 CL_BG_L = '#f77f00'
 CL_BG_TOP_L = '#d62828'
@@ -25,12 +24,12 @@ FG_B_TOP_DC = '#eae2b7'
 
 H_LEFT = 990
 
-class CheckHomework(PagePrincipal):
-    def __init__(self, master, student:Student, course: Courses, material_id, parent, **kwargs):
+class CheckHomework(Page):
+    def __init__(self, master, course: Courses, instructor:Instructor, parent, **kwargs):
         super().__init__(master, bg=CL_BG, **kwargs)
-        self.student = student
         self.course = course
         self.select_ = True
+        self.material_id, self.student_id = '',''
 
         self.f_left = tk.Frame(self, bg=CL_BG, width=1300, height=1080)
         self.f_left.pack_propagate(False)
@@ -91,7 +90,21 @@ class CheckHomework(PagePrincipal):
         tk.Label(self.f_r_select_asing, text='Puntos acumulados', bg='#4b56bd', fg='white',font=(FONT, 40, 'bold')).pack(pady=25)
         tk.Label(self.f_r_select_asing, text=f'{len(data.courses[course.course_id]['students'])}', bg='#4b56bd', fg='white', font=(FONT, 39, 'bold')).pack(pady=10)
 
-        self.b_inf = tk.Button(self, text='Informe General', bg='#5ddb75', fg='white', font=(FONT, 30, 'bold'), width=20)
+        def set_info():
+            if self.select_: #ir al informe general
+                self.change_page(StudentNotes(self.master, instructor, course.course_id,self))
+                self.cancel_select()
+            else:
+                if 0 <= int(self.entry_note.get()) <= int(data.courses[course.course_id]['material'][self.material_id]['points']):
+                    course.qualification(self.student_id, self.material_id, self.entry_note.get())
+                    self.cancel_select()
+                    messagebox.showinfo("Nota subida",
+                                         f'La nota de {data.students[self.student_id]['name']} fue subida correctamente!!')
+
+                else:
+                    messagebox.showerror("Más de la nota máxima!!!",f'¡Cuidado! la nota maxima es {data.courses[course.course_id]['material'][self.material_id]['points']}')
+
+        self.b_inf = tk.Button(self, text='Informe General', bg='#5ddb75', fg='white', font=(FONT, 30, 'bold'),command=set_info, width=20)
         self.b = tk.Button(self, text='Cancelar', bg='#B8444F', fg='white', font=(FONT, 30, 'bold'), width=20, command=self.cancel_select)
         self.b_inf.pack(in_=self.f_r_select, pady=10)
         self.b.pack(in_=self.f_r_select, pady=10)
@@ -123,14 +136,13 @@ class CheckHomework(PagePrincipal):
         self.entry_note.bind("<KeyPress>", solo_numeros)
 
 
-        self.b_0 = tk.Button(self.f_r_note, text='Calificar con 0', font=(FONT,40), bg='#4b56bd', fg='white')
-        self.b_0.pack(pady=10)
+        #self.b_0 = tk.Button(self.f_r_note, text='Calificar con 0', font=(FONT,40), bg='#4b56bd', fg='white', )
+        #self.b_0.pack(pady=10)
 
-        self.f_left_info = CheckNotes(self.f_left, course)
+        self.f_left_info = CheckNotes(self.f_left, course, parent_hw=self)
         self.f_left_info.pack()
 
     def change_stu(self):
-
         self.canvas_top.create_rectangle(0, 0, 330, (1080 - H_LEFT), fill=CL_B_TOP_DC, outline='')
         self.canvas_top.create_text(165, 45, font=(FONT, 30, 'bold'), fill=FG_B_TOP_DC, text='ESTUDIANTES')
         self.canvas_top.create_rectangle(330, 0, 660, (1080 - H_LEFT), fill=CL_B_TOP_AC, outline='')
@@ -146,8 +158,10 @@ class CheckHomework(PagePrincipal):
         self.f_r_note.pack()
         self.b.pack_forget()
         self.b_inf.pack_forget()
+        self.b_inf.config(text='subir nota')
         self.b_inf.pack(in_=self.f_r_note, pady=10)
         self.b.pack(in_=self.f_r_note, pady=10)
+        self.select_ = False
 
 
     def cancel_select(self):
@@ -156,26 +170,27 @@ class CheckHomework(PagePrincipal):
             self.f_left_info.text_students.pack_forget()
 
 class CheckNotes(tk.Frame):
-    def __init__(self, master, course, **kwargs):
+    def __init__(self, master, course, parent_hw, **kwargs):
         super().__init__(master=master,  width=1300, height=H_LEFT,bg=CL_BG,**kwargs)
+        self.parent_hw = parent_hw
         self.course = course
         self.pack_propagate(False)
         tk.Label(self, text='Selecciona una fila de tarea para calificar', font=(FONT, 30,'bold'),bg=CL_BG).pack(pady=30)
 
         def select_student(row, colum, value):
             if row > 0:
-                self.master.master.select_ = False
-                print(self.master.master.select_)
+                self.parent_hw.select_ = False
                 self.pack_forget()
                 self.check = SendNoteMenu(self.master, self.course.course_id, value[0], self.material_select)
                 self.check.pack()
-                self.master.master.b.config(command= self.check.cancel_)
+                self.parent_hw.b.config(command=self.check.cancel_)
                 self.text_students.pack_forget()
                 self.table_students.pack_forget()
-                self.master.master.change_stu()
-
+                self.parent_hw.change_stu()
+                self.parent_hw.student_id = value[0]
         def selec_course(row, colum, value):
             if row > 0:
+                self.master.master.material_id = value[0]
                 self.material_select = value[0]
                 self.table_students.reload(self.student_homework(value[0]))
                 self.text_students.pack(pady=30)
@@ -190,11 +205,8 @@ class CheckNotes(tk.Frame):
         self.table_students = Tabla(self, matrix = [['Estudiante', 'Estado', 'Nota', 'Nota acumulada']], font_size=15, cell_width=15, cell_height=3, cell_command=select_student, select_mode='row', cursor='hand2', propagate_height=4, bg='#97836D')
         #self.table_students.pack()
 
-    def get_notes_course(self):
-        pass
-
     def student_homework(self, id_hom):
-        table = [['Estudiante', 'ID', 'Estado', 'Nota', 'Nota acumulada']]
+        table = [['ID', 'Estudiante', 'Estado', 'Nota', 'Nota acumulada']]
         for students_id in data.courses[self.course.course_id]['students']:
             name = data.students[students_id]['name']
             for material_id, material in data.students[students_id]['material'].items():
@@ -251,12 +263,10 @@ class SendNoteMenu(tk.Frame):
         self.master.master.f_r_select.pack()
         self.master.master.b.pack_forget()
         self.master.master.b_inf.pack_forget()
+        self.master.master.b_inf.config(text='subir nota')
         self.master.master.b_inf.pack(in_=self.master.master.f_r_select, pady=10)
         self.master.master.b.pack(in_=self.master.master.f_r_select, pady=10)
         # Restaurar comando del botón cancelar
         self.master.master.b.config(command=self.master.master.cancel_select)
         self.master.master.entry_note.delete(0, tk.END)
         self.master.master.select_ = True
-
-s = CheckHomework(root, Student('Pepito', '123', 'STU123'), Courses('Programación', 'SUB4354'), 'HOM4', parent= None)
-root.mainloop()

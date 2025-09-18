@@ -2,11 +2,10 @@ import tkinter as tk
 from clases_internas.usuarios import Instructor, Student
 from menus.graphic_tools import Window, PagePrincipal, pack_create_line
 from student_menu import StudentMenu
+from menu_profesor import  MenuProfesores
 from data.data_base import data
 from tkinter import PhotoImage
 
-
-root = Window('Ventana', (1920, 1080))
 
 class Login(PagePrincipal):
     def __init__(self, master,  **kwargs):
@@ -60,10 +59,26 @@ class Login(PagePrincipal):
                 self.change_page(StudentMenu(self.master, parent=self,
                                              student=Student(data.students[str(self.e_user.get())]['name'],self.e_password.get(), str(self.e_user.get()))))
 
+            def init_instruc(): #PARA INICIAR COMO ESTUDIANTE
+                self.e_user.config(state='normal')
+                self.e_password.config(state='normal')
+                self.b_login.config(state='normal')
+                self.b_creaete.config(state='normal')
+                self.b_forgot.config(state='normal')
+                self.l_inf.config(text=self.inf_text)
+
+                self.change_page(MenuProfesores(self.master, Instructor(data.instructors[self.e_user.get()]['name'], self.e_password.get(), self.e_user.get()), self))
+
             if str(self.e_user.get())[:3] == 'IST':
                 if str(self.e_user .get()) in data.instructors:
                     if data.instructors[str(self.e_user .get())]['password'] == str(self.e_password.get()):
-                        pass#self.after()
+                        self.e_user.config(state='disabled')
+                        self.e_password.config(state='disabled')
+                        self.b_login.config(state='disabled')
+                        self.b_creaete.config(state='disabled')
+                        self.b_forgot.config(state='disabled')
+                        self.l_inf.config(text='Iniciando sesión...')
+                        self.b_login.after(1300, init_instruc)
                     else: show_error()
                 else: show_error()
             elif str(self.e_user.get())[:3] == 'STU':
@@ -189,7 +204,3 @@ class Login(PagePrincipal):
         self.e_password.config(state=state_)
         self.b_forgot.config(state=state_)
         self.b_creaete.config(state=state_)
-
-
-log = Login(root)
-root.mainloop()

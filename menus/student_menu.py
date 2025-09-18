@@ -2,7 +2,10 @@ import tkinter as tk
 from graphic_tools import Page, ScrollFrame
 from clases_internas.usuarios import Student
 from data.data_base import data
+from clases_internas.cursos import Courses
 from tkinter import PhotoImage
+from send_homework import SendHomework
+from notas_estudiante import StudentNotes
 
 CL_BG = '#669BBC'
 CL_BG_L = '#669BBC'
@@ -67,12 +70,12 @@ class StudentMenu(Page):
             def asing():
                 s = Student(student.name, student.password, student.user_id)
                 if e_.get().strip() != '':
-                    if str(e_.get()) in data.courses:
+                    if str(e_.get()) in data.courses and e_.get() not in data.students[student.user_id]['courses']:
                         s.course_register(str(e_.get()))
                         teacher = data.courses[str(e_.get())]['teacher']
-                        inf.config(text=f"Se asigno al curso {data.courses[str(e_.get())]} impartido por {data.instructors[teacher]['name']}")
-                    else:
-                        inf.config(text='Lo siento, no ecnontramos ningun curso')
+                        inf.config(text=f"Se asigno al curso {data.courses[str(e_.get())]['course_name']} impartido por {data.instructors[teacher]['name']}")
+                    elif str(e_.get()) not in data.courses: inf.config(text='Lo siento, no ecnontramos ningun curso')
+                    elif e_.get()  in data.students[student.user_id]['courses']: inf.config(text='Lo siento, ya te registraste a este curso\nQuieres segundo round ¿eh?')
                 else: inf.config(text='La entrada no puede estar vacía!!')
 
                 if len(data.students[student.user_id]['courses']) > 0:
@@ -153,6 +156,11 @@ class StudentMenuCourse(tk.Frame):
         tk.Label(self.f_top, text=f'{data.courses[course_id]['course_name']}', font=(FONT, 60, 'bold')).pack(side='left', padx=50)
         tk.Label(self.f_top, text=f'{course_id}  -  {data.instructors[data.courses[course_id]['teacher']]['name']}', font=(FONT, 35, 'bold')).pack(side='right', padx=50)
 
+        def show_no():
+            self.master.master.change_page(StudentNotes(self.master.master.master, student, self.master.master))
+
+        tk.Button(self, text='ver mis notas', cursor='hand2', font=(FONT, 30, 'bold'), command=show_no).pack(pady=20)
+
         self.f_down = ScrollFrame(self, width=(1920 - WID_F_L), height=(1080-200), bg=CL_BG_C, vbar_position='right')
         self.f_down.pack_propagate(False)
         self.f_down.pack()
@@ -160,13 +168,15 @@ class StudentMenuCourse(tk.Frame):
         for id_publish, publish in reversed(list(data.courses[course_id]['material'].items())): #Invierto para tener lo más 'reciente'
             frame_publish = tk.Frame(self.f_down.scr_frame, width=(1920 - WID_F_L-100), height=200)
             frame_publish.pack_propagate(False)
-            print(id_publish)
             match id_publish[:3]:
                 case 'HOM':
                     f_top = tk.Frame(frame_publish)
                     f_top.pack(side='top', fill='x')
-                    tk.Button(f_top, text=f"{publish['tittle']}", font=(FONT,50,'bold'), anchor='w', relief='flat', highlightthickness=0, bd=0, cursor='hand2', width=28).pack(fill='x', anchor='w', expand=1, side='left', padx=30)
-                    tk.Label(f_top, text=f"{id_publish}", font=(FONT,10,'bold'), anchor='e').pack(fill='x', anchor='e', expand=1, side='right', padx=30)
+                    tarea =tk.Button(f_top, text=f"{publish['tittle']}", font=(FONT,50,'bold'), anchor='w', relief='flat', highlightthickness=0, bd=0, cursor='hand2', width=24)
+                    tarea.pack(fill='x', anchor='w', expand=1, side='left', padx=30)
+                    tarea.config(command=lambda v=id_publish: self.master.master.change_page(SendHomework(self.master.master.master, student,
+                                                                                                          Courses(data.courses[course_id]['course_name'], course_id), v, self.master.master)))
+                    tk.Label(f_top, text=f"{id_publish} - {publish['points']}pts", font=(FONT,20,'bold'), anchor='e').pack(fill='x', anchor='e', expand=1, side='right', padx=25)
                     l = tk.Frame(frame_publish, borderwidth=10, width=(1920 - WID_F_L-100), height=2, bg='black')
                     l.pack_propagate(False)
                     l.pack(side='top')

@@ -2,12 +2,12 @@
 import tkinter as tk
 
 from clases_internas.cursos import Courses
-from graphic_tools import Window, Page, PagePrincipal, ScrollFrame
-from clases_internas.usuarios import Instructor
+from graphic_tools import Window, Page, ScrollFrame
+from clases_internas.usuarios import Instructor, Student
 from data.data_base import data
-from tkinter import PhotoImage
 
 from menus.graphic_tools import pack_create_line
+from check_homework import CheckHomework
 
 azul_claro = '#669BBC'
 azul_marino = '#003949'
@@ -21,10 +21,8 @@ font = 'Arial'
 fg = '#FDF0D5'
 
 
-root = Window("Menu Profesores", (1920,1080))
-
-class MenuProfesores(PagePrincipal):
-    def __init__(self, master, instructor:Instructor, **kwargs):
+class MenuProfesores(Page):
+    def __init__(self, master, instructor:Instructor, parent, **kwargs):
         super().__init__(master, **kwargs)
 
         self.__barra_profesor = tk.Frame(self, width=500, height=1080, bg=azul_claro)
@@ -156,8 +154,7 @@ class MenuProfesores(PagePrincipal):
             self.boton_crear = tk.Button(self.create_curse, text='Crear curso', font=(font, 25, 'bold'), fg= fg, width=wid, bg='red', activebackground='blue')
             self.boton_crear.pack(pady=50)
 
-        def exit_():
-            print('Salir')
+        def exit_(): self.change_page(parent)
         tk.Button(self.__frame_info, text='x', width=3, height=1, command=exit_, font=(font, 20, 'bold'), bg=azul_claro, relief='flat', cursor='hand2').pack(side="right", padx=50)
 
     # Me hace falta poner el logo
@@ -259,12 +256,17 @@ class CursoProfesorMenu(tk.Frame):
             n = tk.Button(self.top_level, text='Crear', font=('Arial', 20), command=crear_t)
             n.pack(pady=10)
 
+        def check():
+            self.master.master.change_page(CheckHomework(self.master.master.master, Courses(data.courses[course_id]['course_name'], course_id), user, self.master.master))
 
         tk.Button(self.frame_portal, text='Crear\ntarea', font=(font, 30, 'bold'), bg='#242182', fg='white', width=10, cursor='hand2', command=tarea).pack(side='left', padx=160)
-        tk.Button(self.frame_portal, text='Calificar', font=(font, 30, 'bold'), bg='#24822C', fg='white', width=10, disabledforeground='#B4BCB1').pack(side='left', padx=20)
+        stu = tk.Button(self.frame_portal, text='Calificar', font=(font, 30, 'bold'), bg='#24822C', fg='white', width=10, disabledforeground='#B4BCB1', command=check)
+        stu.pack(side='left', padx=20)
+        #if data.courses[course_id]['students']: stu.config(state='normal')
+        #else: stu.config(state='disabled')
         tk.Button(self.frame_portal, text='Añadir una\npublicación', font=(font, 30, 'bold'), bg='#823735', fg='white', width=10, cursor='hand2', command=publi).pack(side='right', padx=160)
 
-        self.scroll_curso = ScrollFrame(self, width=(1920 - 50), height=1080, bg=blanco_hueso, vbar_position='right')
+        self.scroll_curso = ScrollFrame(self, width=(1920 - 50), height=500, bg=blanco_hueso, vbar_position='right')
         self.scroll_curso.pack_propagate(False)
         self.scroll_curso.pack()
 
@@ -329,7 +331,3 @@ class CursoProfesorMenu(tk.Frame):
 
             tk.Label(frame_no, text='Sin tareas por ahora...', font=(font, 55, 'bold'), bg=blanco_hueso).pack(
                 fill='both')
-
-
-men = MenuProfesores(root, instructor=Instructor('aa', '123', 'IST5492'))
-root.mainloop()

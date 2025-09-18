@@ -157,7 +157,6 @@ class ScrollFrame(tk.Frame):
 
         def confi_canvas_scroll():
             self.master.update_idletasks()
-            print(self._canvas_scroll.bbox('all'), self.cget('height'))
 
             def al_chile_mejor_lo_desactivo_xd(): pass
 
