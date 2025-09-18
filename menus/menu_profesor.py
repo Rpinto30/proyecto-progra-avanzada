@@ -9,6 +9,10 @@ from data.data_base import data
 from menus.graphic_tools import pack_create_line
 from check_homework import CheckHomework
 
+# Distribución de colores con variables
+rojo_claro = '#EF233C'
+blanco_gris_azul = '#EDF2F4'
+rojo_fuerte = '#D90429'
 azul_claro = '#669BBC'
 azul_marino = '#003949'
 blanco_hueso = '#E1E2D5'
