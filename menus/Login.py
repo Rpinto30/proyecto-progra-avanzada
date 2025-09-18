@@ -135,9 +135,6 @@ class Login(PagePrincipal):
 
 
 
-
-
-
         # Labels
         l_front, e_front = ('Arial', 12, 'bold'), ('Arial', 30)
         tk.Label(self.f_izq, text="Login", fg='black', font=('Arial', 50, 'bold'), bg='white').pack(side="top")
