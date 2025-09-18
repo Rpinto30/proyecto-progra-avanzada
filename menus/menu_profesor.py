@@ -80,6 +80,20 @@ class MenuProfesores(PagePrincipal):
                 self.menu = MenuProfesores(self, id_curso, user)
                 self.__frame_info.pack()
                 self.id_curso = id_curso
+        # Verifica que hayan cursos asignados
+        if len(data.user[user.user_id]['courses']) > 0:
+            for courses_id in data.students[user.user_id]['courses']:
+                scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg=blanco_hueso, highlightthickness=3,
+                                           highlightbackground='white')
+                self.scr_courses.pack_on_scroll(scroll_curso, pady=10, fill='x', padx=2)
+                b = tk.Button(scroll_curso, text=str(data.courses[courses_id]['course_name']), font=(font, 39),
+                              width=15, bg=blanco_hueso)
+                b.pack(fill='x')
+                tk.Label(scroll_curso,
+                         text=f"{str(courses_id)} - {str(data.instructors[data.courses[courses_id]['teacher']]['name'])}",
+                         font=(font, 17), anchor='center', bg='black').pack(fill='x')
+                b.config(command=lambda c=courses_id: entrada_menu(c))
+        else:
 
         def exit_(): print('Salir')
         tk.Button(self.__frame_info, text='x', width=3, height=1, command=exit_, font=(font, 20, 'bold'), bg=azul_claro, relief='flat').pack(side="right", padx=50)
