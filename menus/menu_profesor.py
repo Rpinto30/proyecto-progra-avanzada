@@ -66,6 +66,7 @@ class MenuProfesores(PagePrincipal):
         self.__frame_info.pack()
 
 
+
         for course_id in data.instructors[user.user_id]['courses']:
             scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg= 'yellow', highlightthickness=2, highlightbackground='pink')
             self.scr_courses.pack_on_scroll(scroll_curso, pady=10, fill='x',padx=2)
@@ -76,8 +77,14 @@ class MenuProfesores(PagePrincipal):
             tk.Label(scroll_curso, text=f'{str(course_id)} - {str(data.instructors[data.courses[course_id]['teacher']]['name'])}', font=(font, 14), anchor='center', width=39, bg='black').pack(fill='x', padx=10)
             '''
 
+        def entrada_menu(id_course):
+            if self.id_in_course != id_course:
+                if self.menu is not None: self.menu.pack_forget()
+                self.menu = MenuProfesores(self, id_course, user)
+                self.__frame_info.pack()
+                self.id_in_course = id_course
 
-        def exit_(): print('Salir')#self.change_page(parent)
+        def exit_(): print('Salir')
         tk.Button(self.__frame_info, text='x', width=3, height=1, command=exit_, font=(font, 20, 'bold'), bg=azul_claro, relief='flat').pack(side="right", padx=50)
 
     # Me hace falta poner el logo
@@ -90,7 +97,14 @@ class MenuProfesores(PagePrincipal):
             self.frame_curso.pack()
             tk.Label(self.frame_curso, text=f"{data.courses[course_id]['cours_name']}",
                      font=(font, 60, 'bold')).pack(side='left', padx=50)
-            tk.Label(self.frame_curso, text=f'{course_id} - {data.courses[course_id]['teacher']} ', )
+            tk.Label(self.frame_curso, text=f'{course_id} - {data.courses[course_id]['teacher']} ', font=(font, 35, 'bold')).pack(side='right', padx=50)
+
+            self.scroll_curso = ScrollFrame(self, width=(1920 - wid), height=(1080-200), bg='black', vbar_position='right')
+            self.scroll_curso.pack_propagate(False)
+            self.scroll_curso.pack()
+
+
+
 
 
 men = MenuProfesores(root, user=Instructor('Milton Nimatuj', '123', 'IST'))
