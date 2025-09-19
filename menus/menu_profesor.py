@@ -16,7 +16,9 @@ blanco_gris_azul_clarito = '#d1c9c9'
 azul_claro = '#4f88ab'
 azul_marino = '#002442'
 blanco_hueso = '#E1E2D5'
-
+gris_celeste = '#566d82'
+celeste_clarito = '#81adc8'
+celeste_grisaseo = '#3f6d89'
 scroll_bg = '#2E2E39'
 scroll = '#FFFFFF'
 scroll_ac = '#C8D3E9'
@@ -98,7 +100,7 @@ class MenuProfesores(Page):
             def exit_top():
                 self.top_level.destroy()
             self.top_level.protocol("WM_DELETE_WINDOW", exit_top)
-
+# BOTONES DE CURSOS
         tk.Button(self.__barra_profesor, text='Crear curso', font=(font, 30), anchor='center', width=14, fg=fg, command=create_course, cursor='hand2',
                   bg=azul_claro).pack(fill='x', side='bottom')
 
@@ -169,18 +171,17 @@ class CursoProfesorMenu(tk.Frame):
         self.course_id = course_id
         self.total_puntos_curso = 0
         self.pack_propagate(False)
-        self.frame_curso = tk.Frame(self, width=(1920 - 50), height=(1080 - 200 - 700), bg='#A0503B')
+        self.frame_curso = tk.Frame(self, width=(1920 - 50), height=(1080 - 200 - 700), bg=celeste_grisaseo)
         self.frame_curso.pack_propagate(False)
         self.frame_curso.pack()
-        tk.Label(self.frame_curso, text=f"{data.courses[course_id]['course_name']}",bg='#A0503B', fg='white',
+        tk.Label(self.frame_curso, text=f"{data.courses[course_id]['course_name']}",bg=celeste_grisaseo, fg='white',
                  font=(font, 60, 'bold')).pack(side='left', padx=50)
-        tk.Label(self.frame_curso, text=f'{course_id}', font=(font, 35, 'bold'),bg='#A0503B',fg='white').pack(side='right', padx=50)
+        tk.Label(self.frame_curso, text=f'{course_id}', font=(font, 35, 'bold'),bg=celeste_grisaseo,fg='white').pack(side='right', padx=50)
 
-        self.frame_portal = tk.Frame(self, width=(1920 - 50), height=(1080 - 200 - 700), bg='#AB9784')
+        self.frame_portal = tk.Frame(self, width=(1920 - 50), height=(1080 - 200 - 700), bg=celeste_clarito)
         self.frame_portal.pack_propagate(False)
         self.frame_portal.pack()
 
-        def examen(): pass
 
         def tarea():
             self.top_level = tk.Toplevel(self.master, width=1000, height=700, bg=blanco_hueso)
@@ -232,7 +233,7 @@ class CursoProfesorMenu(tk.Frame):
             self.top_level.resizable(False, False)
             self.top_level.grab_set()
 
-            tk.Label(self.top_level, text='Ingresa un nombre a la tarea', font=('Arial', 30, 'bold'), width=35,
+            tk.Label(self.top_level, text='Ingresa el titulo de la publicación', font=('Arial', 30, 'bold'), width=35,
                      bg=blanco_hueso).pack(pady=20)
             inf = tk.Label(self.top_level, text='',
                            font=('Arial', 15, 'bold'), bg=blanco_hueso)
@@ -264,12 +265,13 @@ class CursoProfesorMenu(tk.Frame):
         def check():
             self.master.master.change_page(CheckHomework(self.master.master.master, Courses(data.courses[course_id]['course_name'], course_id), user, self.master.master))
 
-        tk.Button(self.frame_portal, text='Crear\ntarea', font=(font, 30, 'bold'), bg='#242182', fg='white', width=10, cursor='hand2', command=tarea).pack(side='left', padx=160)
-        stu = tk.Button(self.frame_portal, text='Calificar', font=(font, 30, 'bold'), bg='#24822C', fg='white', width=10, disabledforeground='#B4BCB1', command=check)
+        # Botones de pantalla cursos
+        tk.Button(self.frame_portal, text='Crear\ntarea / examen ', font=(font, 30, 'bold'), bg=gris_celeste, fg='white', width=12, cursor='hand2', command=tarea).pack(side='left', padx=160)
+        stu = tk.Button(self.frame_portal, text='Calificar \ntarea', font=(font, 30, 'bold'), bg=gris_celeste, fg='white', width=12, disabledforeground=gris_celeste, command=check)
         stu.pack(side='left', padx=20)
         #if data.courses[course_id]['students']: stu.config(state='normal')
         #else: stu.config(state='disabled')
-        tk.Button(self.frame_portal, text='Añadir una\npublicación', font=(font, 30, 'bold'), bg='#823735', fg='white', width=10, cursor='hand2', command=publi).pack(side='right', padx=160)
+        tk.Button(self.frame_portal, text='Añadir una\npublicación', font=(font, 30, 'bold'), bg=gris_celeste, fg='white', width=12, cursor='hand2', command=publi).pack(side='right', padx=50)
 
         self.scroll_curso = ScrollFrame(self, width=(1920 - 50), height=500, bg=blanco_hueso, vbar_position='right')
         self.scroll_curso.pack_propagate(False)
