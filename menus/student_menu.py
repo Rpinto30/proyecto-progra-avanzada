@@ -6,23 +6,28 @@ from clases_internas.cursos import Courses
 from tkinter import PhotoImage
 from send_homework import SendHomework
 from notas_estudiante import StudentNotes
+#from menus.graphic_tools import Window, PagePrincipal
+
+
+#root = Window('Gestor de notas - Universidad RAR', (1920, 1080), icon_image=r'sources\Logo_iso.png')
+
 
 CL_BG = '#669BBC'
 CL_BG_L = '#669BBC'
-CL_BG_R = '#003949'
-CL_BG_LT = '#4F3A92'
-CL_BG_LM = '#4D18B0'
-CL_BD_LM = '#071E29'
-CL_BG_SCR_L = '#4B73CE'
-CL_BG_BT_C = '#8D6DB7'
-CL_BG_RB = '#1A7789'
+CL_BG_R = '#E1E2D5'
+CL_BG_LT = '#669BBC'
+CL_BG_LM = '#014FC0'
+CL_BD_LM = 'black'
+CL_BG_SCR_L = '#78A7C0'
+CL_BG_BT_C = '#014FC0'
+CL_BG_RB = '#002B5F'
 
 CL_SCROLL_BG = '#2E2E39'
-CL_SCOLL = '#FFFFFF'
+CL_SCOLL = '#E1E2D5'
 CL_SCOLL_AC = '#C8D3E9'
 
 FONT = 'Arial'
-FG_LT = '#FDF0D5'
+FG_LT = 'white'
 
 WID_F_L = 480
 
@@ -64,7 +69,7 @@ class StudentMenu(Page):
             tk.Label(self.top_level, text='Ingresa el codigo de un curso para asignarte:', font=('Arial', 30, 'bold'), bg='white').pack(pady=30)
             inf = tk.Label(self.top_level, text='(El codigo debe haber sido dado por tu instructor)', font=('Arial', 15, 'bold'), bg='white')
             inf.pack(pady=10)
-            e_ = tk.Entry(self.top_level,  font=('Arial', 45, 'bold'))
+            e_ = tk.Entry(self.top_level,  font=('Arial', 45, 'bold'), relief="solid")
             e_.pack(pady=20)
 
             def asing():
@@ -93,7 +98,7 @@ class StudentMenu(Page):
                         b.config(command=lambda c=courses_id: entry_menu_course(c))
 
 
-            tk.Button(self.top_level, text='Asignarse!', bg='red', fg='white',font=('Arial', 30, 'bold'), cursor='hand2', command=asing).pack(pady=10)
+            tk.Button(self.top_level, text='Asignarse!', bg='blue', fg='white',font=('Arial', 30, 'bold'), cursor='hand2', command=asing).pack(pady=10)
 
             def exit_top():
                 self.top_level.destroy()
@@ -120,7 +125,7 @@ class StudentMenu(Page):
             for courses_id in data.students[student.user_id]['courses']:
                 f_course_scroll = tk.Frame(self.scr_courses.scr_frame, bg=CL_BG_SCR_L,highlightthickness=3, highlightbackground='#0D0C2D')
                 self.scr_courses.pack_on_scroll(f_course_scroll, pady=10, fill='x',padx=2)
-                b = tk.Button(f_course_scroll, text=str(data.courses[courses_id]['course_name']), font=(FONT,39), width=15, bg=CL_BG_BT_C, cursor='hand2')
+                b = tk.Button(f_course_scroll, text=str(data.courses[courses_id]['course_name']), font=(FONT,39), width=15, bg=CL_BG_BT_C, cursor='hand2', fg='#E1E2D5')
                 b.pack( fill='x')
                 tk.Label(f_course_scroll, text=f"{str(courses_id)} - {str(data.instructors[data.courses[courses_id]['teacher']]['name'])}", font=(FONT, 17), anchor='center',bg=CL_BG_SCR_L).pack(fill='x')
                 b.config(command = lambda c=courses_id: entry_menu_course(c))
@@ -138,13 +143,13 @@ class StudentMenu(Page):
         def exit_(): self.change_page(parent)
         tk.Button(self.__f_top_right, text='→', width=3, height=0, command=exit_, font=(FONT, 50, 'bold'), bg='#8292CB', relief='flat', cursor='hand2').pack(side="right", padx=50)
 
-        logo = PhotoImage(file=r'sources/Logo_iso_stu.png', width=199, height=200)
+        logo = PhotoImage(file=r'sources/Logo_students.png', width=199, height=200)
         logo_photo = tk.Label(self.__f_top_right, image=logo, highlightthickness=0, bd=0)
         logo_photo.image = logo
         logo_photo.pack(side='left',padx=30)
 
-CL_BG_C = "#9DCBBD"
-CL_BG_C_T = '#FFFFFF'
+CL_BG_C = "#E1E2D5"
+CL_BG_C_T = '#E1E2D5'
 
 class StudentMenuCourse(tk.Frame):
     def __init__(self, master, course_id:str, student:Student, **kwars):
@@ -153,8 +158,8 @@ class StudentMenuCourse(tk.Frame):
         self.f_top = tk.Frame(self, width=(1920 - WID_F_L), height=(1080-200-700), bg=CL_BG_C_T)
         self.f_top.pack_propagate(False)
         self.f_top.pack()
-        tk.Label(self.f_top, text=f'{data.courses[course_id]['course_name']}', font=(FONT, 60, 'bold')).pack(side='left', padx=50)
-        tk.Label(self.f_top, text=f'{course_id}  -  {data.instructors[data.courses[course_id]['teacher']]['name']}', font=(FONT, 35, 'bold')).pack(side='right', padx=50)
+        tk.Label(self.f_top, text=f'{data.courses[course_id]['course_name']}', font=(FONT, 60, 'bold'), bg=CL_BG_C_T, fg='#080C64').pack(side='left', padx=50)
+        tk.Label(self.f_top, text=f'{course_id}  -  {data.instructors[data.courses[course_id]['teacher']]['name']}', font=(FONT, 35, 'bold'), bg=CL_BG_C_T, fg='#080C64').pack(side='right', padx=50)
 
         def show_no():
             self.master.master.change_page(StudentNotes(self.master.master.master, student, self.master.master))
@@ -197,3 +202,7 @@ class StudentMenuCourse(tk.Frame):
                     e.config(state='disabled', height= int(e.index('end-1c').split('.')[0]))
                     e.pack(fill='x', anchor='w', expand=1, side='bottom', padx=20)
             self.f_down.pack_on_scroll(frame_publish, padx=50, pady=30)
+
+
+#log = StudentMenu(root, Student("pepe", "123", "STU5520"), None)
+#root.mainloop()
