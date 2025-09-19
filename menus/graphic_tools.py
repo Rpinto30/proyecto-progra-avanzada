@@ -1,6 +1,5 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from math import floor
 
 class Window(tk.Tk):
     # DOCSTRING: https://www.datacamp.com/tutorial/docstrings-python

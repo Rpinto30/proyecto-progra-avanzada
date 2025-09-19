@@ -6,6 +6,7 @@ from clases_internas.cursos import Courses
 from tkinter import PhotoImage
 from send_homework import SendHomework
 from notas_estudiante import StudentNotes
+
 #from menus.graphic_tools import Window, PagePrincipal
 
 
@@ -14,13 +15,13 @@ from notas_estudiante import StudentNotes
 
 CL_BG = '#669BBC'
 CL_BG_L = '#669BBC'
-CL_BG_R = '#E1E2D5'
-CL_BG_LT = '#669BBC'
-CL_BG_LM = '#014FC0'
-CL_BD_LM = 'black'
-CL_BG_SCR_L = '#78A7C0'
-CL_BG_BT_C = '#014FC0'
-CL_BG_RB = '#002B5F'
+CL_BG_R = '#003949'
+CL_BG_LT = '#4F3A92'
+CL_BG_LM = '#4D18B0'
+CL_BD_LM = '#071E29'
+CL_BG_SCR_L = '#4B73CE'
+CL_BG_BT_C = '#8D6DB7'
+CL_BG_RB = '#1A7789'
 
 CL_SCROLL_BG = '#2E2E39'
 CL_SCOLL = '#E1E2D5'
@@ -62,7 +63,10 @@ class StudentMenu(Page):
 
         def create_user():
             self.top_level = tk.Toplevel(self.master, width=1000, height=700, bg='white')
+            self.top_level.geometry("+%d+%d" %(self.master.winfo_width()+200,self.master.winfo_height()+200))
+            self.top_level.geometry("+%d+%d" % ((self.master.winfo_width() - 1000) // 2, (self.master.winfo_height() - 700) // 2))
             self.top_level.resizable(False,False)
+            self.top_level.focus_set()
             #self.top_level.pack_propagate(False)  # PARA EVITAR QUE SE DEFORME AL HACER UN PACK
             self.top_level.grab_set()
 
@@ -74,16 +78,18 @@ class StudentMenu(Page):
 
             def asing():
                 s = Student(student.name, student.password, student.user_id)
+                asigned = False
                 if e_.get().strip() != '':
                     if str(e_.get()) in data.courses and e_.get() not in data.students[student.user_id]['courses']:
                         s.course_register(str(e_.get()))
                         teacher = data.courses[str(e_.get())]['teacher']
                         inf.config(text=f"Se asigno al curso {data.courses[str(e_.get())]['course_name']} impartido por {data.instructors[teacher]['name']}")
+                        asigned = True
                     elif str(e_.get()) not in data.courses: inf.config(text='Lo siento, no ecnontramos ningun curso')
                     elif e_.get()  in data.students[student.user_id]['courses']: inf.config(text='Lo siento, ya te registraste a este curso\nQuieres segundo round ¿eh?')
                 else: inf.config(text='La entrada no puede estar vacía!!')
 
-                if len(data.students[student.user_id]['courses']) > 0:
+                if len(data.students[student.user_id]['courses']) > 0 and asigned:
                     for w in self.scr_courses.scr_frame.winfo_children(): w.pack_forget()
                     for courses_id in data.students[student.user_id]['courses']:
                         f_course_scroll = tk.Frame(self.scr_courses.scr_frame, bg=CL_BG_SCR_L, highlightthickness=3,

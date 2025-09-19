@@ -87,7 +87,7 @@ class CheckHomework(Page):
         self.f_r_select_asing.pack_propagate(False)
         self.f_r_select_asing.pack(pady=50)
 
-        tk.Label(self.f_r_select_asing, text='Puntos acumulados', bg='#4b56bd', fg='white',font=(FONT, 40, 'bold')).pack(pady=25)
+        tk.Label(self.f_r_select_asing, text='Estudiantes asignados', bg='#4b56bd', fg='white',font=(FONT, 35, 'bold')).pack(pady=25)
         tk.Label(self.f_r_select_asing, text=f'{len(data.courses[course.course_id]['students'])}', bg='#4b56bd', fg='white', font=(FONT, 39, 'bold')).pack(pady=10)
 
         def set_info():
@@ -263,7 +263,7 @@ class SendNoteMenu(tk.Frame):
         self.master.master.f_r_select.pack()
         self.master.master.b.pack_forget()
         self.master.master.b_inf.pack_forget()
-        self.master.master.b_inf.config(text='subir nota')
+        self.master.master.b_inf.config(text='Informe General')
         self.master.master.b_inf.pack(in_=self.master.master.f_r_select, pady=10)
         self.master.master.b.pack(in_=self.master.master.f_r_select, pady=10)
         # Restaurar comando del botón cancelar
