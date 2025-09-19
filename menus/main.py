@@ -6,3 +6,4 @@ root = Window('Gestor de notas - Universidad RAR', (1920, 1080), icon_image=r'so
 
 log = Login(root)
 root.mainloop()
+
