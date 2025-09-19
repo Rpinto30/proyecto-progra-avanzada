@@ -140,7 +140,7 @@ class Login(PagePrincipal):
                 self.top_info_add.pack(pady=10)
                 self.shut_down('normal')
 
-            self.button_login = tk.Button(self.f_toplevel, text='Crear', font=('Arial', 30, 'bold'), fg='black', width=20,
+            self.button_login = tk.Button(self.f_toplevel, text='Crear', font=('Arial', 30, 'bold'), fg='white', width=20,
                                      bg='red', activebackground='#FF9EA2', cursor='hand2', relief='solid', command=create_user_json)
 
             self.button_login.pack(pady=30, padx=30)
@@ -171,7 +171,7 @@ class Login(PagePrincipal):
         tk.Label(self.f_izq, text="Login", fg='black', font=('Arial', 50, 'bold'), bg='white').pack(side="top")
 
         #Buttons
-        self.b_login = tk.Button(self.f_izq,text='Log In', font=('Arial', 30, 'bold'), fg='black', width=20, bg='red', activebackground='#FF9EA2', cursor='hand2', relief='solid', command=log_in)
+        self.b_login = tk.Button(self.f_izq,text='Log In', font=('Arial', 30, 'bold'), fg='white', width=20, bg='red', activebackground='#FF9EA2', cursor='hand2', relief='solid', command=log_in)
         #USUARIO
         l_user, self.e_user = pack_create_line(self.f_izq,
                                                tk.Label, {'text':"Codigo\nde usuario:", 'fg':'black', 'font':('Arial', 30, 'bold'), 'justify':'left','bg':'white'},
