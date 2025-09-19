@@ -78,16 +78,17 @@ class MenuProfesores(Page):
                 if len(data.instructors[instructor.user_id]['courses']) > 0:
                     for w in self.scr_courses.scr_frame.winfo_children(): w.pack_forget()
                     for courses_id in data.instructors[instructor.user_id]['courses']:
-                        scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg=blanco_gris_azul, highlightthickness=3,
-                                                highlightbackground=blanco_gris_azul_clarito)
-                        self.scr_courses.pack_on_scroll(scroll_curso, pady=10, fill='x', padx=2)
+                        scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg=blanco_hueso, highlightthickness=3,
+                                                highlightbackground=blanco_gris_azul)
+                        self.scr_courses.pack_on_scroll(scroll_curso, fill="x", pady=10, padx=2)
+                        # BOTON CURSOS
                         boton_scroll = tk.Button(scroll_curso, text=str(data.courses[courses_id]['course_name']),
-                                                 font=(font, 39),
-                                                 width=12, bg=blanco_gris_azul)
+                                                 cursor='hand2', width=15,
+                                                 font=(font, 39), bg=blanco_gris_azul_clarito)
                         boton_scroll.pack(fill='x')
                         tk.Label(scroll_curso,
                                  text=f"{str(courses_id)} - {str(data.instructors[data.courses[courses_id]['teacher']]['name'])}",
-                                 font=(font, 17), anchor='center', bg='white').pack(fill='x')
+                                 font=(font, 17), anchor='center', bg=blanco_gris_azul_clarito).pack(fill='x')
                         boton_scroll.config(command=lambda c=courses_id: entrada_menu(c))
 
 
@@ -130,7 +131,8 @@ class MenuProfesores(Page):
                 scroll_curso = tk.Frame(self.scr_courses.scr_frame, bg=blanco_hueso, highlightthickness=3,
                                            highlightbackground=blanco_gris_azul)
                 self.scr_courses.pack_on_scroll(scroll_curso,  fill="x", pady=10, padx=2)
-                boton_scroll = tk.Button(scroll_curso, text=str(data.courses[courses_id]['course_name']),cursor='hand2', width=16,
+                # BOTON CURSOS
+                boton_scroll = tk.Button(scroll_curso, text=str(data.courses[courses_id]['course_name']),cursor='hand2', width=15,
                                          font=(font, 39), bg=blanco_gris_azul_clarito)
                 boton_scroll.pack(fill='x')
                 tk.Label(scroll_curso,
