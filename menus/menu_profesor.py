@@ -279,10 +279,10 @@ class CursoProfesorMenu(tk.Frame):
 
         # Botones de pantalla cursos
         tk.Button(self.frame_portal, text='Crear\ntarea / examen ', font=(font, 30, 'bold'), bg=gris_celeste, fg='white', width=12, cursor='hand2', command=tarea).pack(side='left', padx=160)
-        stu = tk.Button(self.frame_portal, text='Calificar \ntarea', font=(font, 30, 'bold'), bg=gris_celeste, fg='white', width=12, disabledforeground=gris_celeste, command=check)
+        stu = tk.Button(self.frame_portal, text='Calificar \ntarea', font=(font, 30, 'bold'), bg=gris_celeste, fg='white', width=12, disabledforeground='#A69E99', command=check)
         stu.pack(side='left', padx=20)
-        #if data.courses[course_id]['students']: stu.config(state='normal')
-        #else: stu.config(state='disabled')
+        if data.courses[course_id]['students']: stu.config(state='normal')
+        else: stu.config(state='disabled')
         tk.Button(self.frame_portal, text='Añadir una\npublicación', font=(font, 30, 'bold'), bg=gris_celeste, fg='white', width=12, cursor='hand2', command=publi).pack(side='right', padx=50)
 
         self.scroll_curso = ScrollFrame(self, width=(1920 - 50), height=500, bg=blanco_hueso, vbar_position='right')
