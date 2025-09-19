@@ -1,5 +1,6 @@
 #Otra vez porque elimine mi archivo anterior por accidente
 import tkinter as tk
+from tkinter.messagebox import showinfo
 
 from clases_internas.cursos import Courses
 from graphic_tools import Window, Page, ScrollFrame
@@ -8,6 +9,7 @@ from data.data_base import data
 
 from menus.graphic_tools import pack_create_line
 from check_homework import CheckHomework
+from tkinter import messagebox
 
 # Distribución de colores con variables
 
@@ -26,7 +28,7 @@ wid = 800
 font = 'Arial'
 fg = '#FDF0D5'
 
-
+tk.Toplevel
 class MenuProfesores(Page):
     def __init__(self, master, instructor:Instructor, parent, **kwargs):
         super().__init__(master, **kwargs)
@@ -59,6 +61,9 @@ class MenuProfesores(Page):
         def create_course():
             self.top_level = tk.Toplevel(self.master, width=1000, height=700, bg='white')
             self.top_level.resizable(False,False)
+            self.master.update_idletasks()
+            self.top_level.geometry(
+                "+%d+%d" % ((self.master.winfo_width() - self.top_level.winfo_width()) // 2, (self.master.winfo_height() - self.top_level.winfo_height()) // 2))
             #self.top_level.pack_propagate(False)  # PARA EVITAR QUE SE DEFORME AL HACER UN PACK
             self.top_level.grab_set()
 
@@ -72,7 +77,8 @@ class MenuProfesores(Page):
                 if e_.get().strip() != '':
                     instructor.create_course(str(e_.get()))
                     a.config(state='disabled')
-                    inf.config(text='El curso ha sido creado correctamente')
+                    self.top_level.destroy()
+                    showinfo('Curso agregado', 'El curso se agregó correctamente!!')
 
                 else:
                     inf.config(text='La entrada no puede estar vacía!!')
@@ -150,6 +156,8 @@ class MenuProfesores(Page):
 
         def crear_curso():
             self.create_curse = tk.Toplevel(self.master, width=1000, height=750, bg=azul_claro)
+            self.create_curse.geometry(
+                "+%d+%d" % ((self.master.winfo_width() - 1000) // 2, (self.master.winfo_height() - 750) // 2))
             self.create_curse.resizable(False)
             self.create_curse.pack_propagate(False)
             texto_crear_curso = tk.Label(self.create_curse, text='Crear curso', font=(font, 20, 'bold'), fg='white', bg=azul_claro)
@@ -185,6 +193,8 @@ class CursoProfesorMenu(tk.Frame):
 
         def tarea():
             self.top_level = tk.Toplevel(self.master, width=1000, height=700, bg=blanco_hueso)
+            self.top_level.geometry(
+                "+%d+%d" % ((self.master.master.master.winfo_width() - 1000) // 2, (self.master.master.master.winfo_height() - 700) // 2))
             self.top_level.resizable(False, False)
             self.top_level.grab_set()
 
@@ -230,6 +240,8 @@ class CursoProfesorMenu(tk.Frame):
         def publi():
 
             self.top_level = tk.Toplevel(self.master, width=1000, height=700, bg=blanco_hueso)
+            self.top_level.geometry(
+                "+%d+%d" % ((self.master.winfo_width() - 1000) // 2, (self.master.winfo_height() - 700) // 2))
             self.top_level.resizable(False, False)
             self.top_level.grab_set()
 

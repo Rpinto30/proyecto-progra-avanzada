@@ -5,14 +5,13 @@ from student_menu import StudentMenu
 from menu_profesor import  MenuProfesores
 from data.data_base import data
 from tkinter import PhotoImage
+from tkinter.ttk import Progressbar
 
-
+tk.Toplevel
 class Login(PagePrincipal):
     def __init__(self, master,  **kwargs):
         super().__init__(master=master, bg='red', **kwargs)
-        self.f_der = tk.Frame
-        self.f_top = tk.Frame
-        self.f_izq = tk.Frame
+
 
         self.f_der = tk.Frame(self, width=1120, height=1080, bg='green')
         self.f_der.pack_propagate(False)
@@ -26,6 +25,8 @@ class Login(PagePrincipal):
         self.f_izq.pack_propagate(False)
         self.f_izq.pack(side="left")
 
+
+
         photo = PhotoImage(file=r'sources/imagen_universidad.png', width=1120, height=1080)
         l_photo = tk.Label(self.f_der, image=photo)
         l_photo.image = photo
@@ -38,10 +39,11 @@ class Login(PagePrincipal):
 
         #COMMANDS
         def log_in():
+
             def show_error(text='Error: No se pudo iniciar sesión'):
                 def exit_error():
                     self.l_inf.config(text=self.inf_text, fg='gray')
-                    self.b_login.config(state='normal')
+                    self.shut_down('normal')
                 self.b_login.config(state='disabled')
                 self.b_creaete.config(state='disabled')
                 self.b_forgot.config(state='disabled')
@@ -69,6 +71,7 @@ class Login(PagePrincipal):
 
                 self.change_page(MenuProfesores(self.master, Instructor(data.instructors[self.e_user.get()]['name'], self.e_password.get(), self.e_user.get()), self))
 
+
             if str(self.e_user.get())[:3] == 'IST':
                 if str(self.e_user .get()) in data.instructors:
                     if data.instructors[str(self.e_user .get())]['password'] == str(self.e_password.get()):
@@ -78,7 +81,30 @@ class Login(PagePrincipal):
                         self.b_creaete.config(state='disabled')
                         self.b_forgot.config(state='disabled')
                         self.l_inf.config(text='Iniciando sesión...')
-                        self.b_login.after(1300, init_instruc)
+
+                        self.top_bar = tk.Toplevel(self.master, width=500, height=200, bg='white')
+                        self.top_bar.resizable(False, False)
+                        self.top_bar.pack_propagate(False)
+                        self.top_bar.grab_set()
+                        self.top_bar.geometry(
+                            "+%d+%d" % ((self.master.winfo_width() - 500) // 2,
+                                        (self.master.winfo_height() - 200) // 2))
+                        tk.Label(self.top_bar, text='Iniciando sesión...', font=('Arial', 30, 'bold'), bg='white').pack(pady=30)
+                        self.progressbar = Progressbar(self.top_bar, orient="horizontal", length=300,
+                                                       mode="determinate")
+                        self.progressbar.pack(expand=True, pady=10)
+                        self.progressbar['value'] = 0
+
+                        def star_bar():
+                            if self.progressbar['value'] < 100:
+                                self.progressbar['value'] += 10
+                                self.top_bar.after(200, star_bar)
+                            else:
+                                self.top_bar.destroy()
+                                init_instruc()
+                        star_bar()
+
+
                     else: show_error()
                 else: show_error()
             elif str(self.e_user.get())[:3] == 'STU':
@@ -90,7 +116,29 @@ class Login(PagePrincipal):
                         self.b_creaete.config(state='disabled')
                         self.b_forgot.config(state='disabled')
                         self.l_inf.config(text='Iniciando sesión...')
-                        self.b_login.after(1300, init_student)
+                        self.top_bar = tk.Toplevel(self.master, width=500, height=200, bg='white')
+                        self.top_bar.resizable(False, False)
+                        self.top_bar.pack_propagate(False)
+                        self.top_bar.grab_set()
+                        self.top_bar.geometry(
+                            "+%d+%d" % ((self.master.winfo_width() - 500) // 2,
+                                        (self.master.winfo_height() - 200) // 2))
+                        tk.Label(self.top_bar, text='Iniciando sesión...', font=('Arial', 30, 'bold'), bg='white').pack(
+                            pady=30)
+                        self.progressbar = Progressbar(self.top_bar, orient="horizontal", length=300,
+                                                       mode="determinate")
+                        self.progressbar.pack(expand=True, pady=10)
+                        self.progressbar['value'] = 0
+
+                        def star_bar():
+                            if self.progressbar['value'] < 100:
+                                self.progressbar['value'] += 10
+                                self.top_bar.after(200, star_bar)
+                            else:
+                                self.top_bar.destroy()
+                                init_student()
+
+                        star_bar()
                     else: show_error()
                 else: show_error()
 
@@ -102,13 +150,16 @@ class Login(PagePrincipal):
             self.top_level.resizable(False,False)
             self.top_level.pack_propagate(False)  # PARA EVITAR QUE SE DEFORME AL HACER UN PACK
             self.top_level.grab_set()
+            self.top_level.geometry("+%d+%d" % ((self.master.winfo_width()-1000)//2, (self.master.winfo_height()-700)//2))
             txt = tk.Label(self.top_level, text='Crear usuario', font=('Arial', 30, 'bold'), fg='white', bg='red')
             txt.pack(fill='x')
             v = tk.StringVar(value='1')  # Variable global de los RadioButton
             self.top_top_frame = tk.Frame(self.top_level, bg='white')
             self.top_top_frame.pack()
-            tk.Radiobutton(self.top_top_frame, text='Estudiante', value='1', variable=v, font=('Arial', 17, 'bold'), bg='white').pack(ipady=5, padx=10, side='right')
-            tk.Radiobutton(self.top_top_frame, text='Instructor', value='2', variable=v, font=('Arial', 17, 'bold'), bg='white').pack(ipady=5, padx=10, side='left')
+            r_student = tk.Radiobutton(self.top_top_frame, text='Estudiante', value='1', variable=v, font=('Arial', 17, 'bold'), bg='white')
+            r_student.pack(ipady=5, padx=10, side='right')
+            r_professor = tk.Radiobutton(self.top_top_frame, text='Instructor', value='2', variable=v, font=('Arial', 17, 'bold'), bg='white')
+            r_professor.pack(ipady=5, padx=10, side='left')
             self.f_toplevel = tk.Frame(self.top_level, bg='white')
             self.f_toplevel.pack()
 
@@ -122,23 +173,32 @@ class Login(PagePrincipal):
             self.top_info_add = tk.Label(self.f_toplevel, text='', font=('Arial', 30, 'bold'), fg='blue')
 
             def create_user_json():
+                def salir__():
+                    self.top_level.destroy()
+                    self.shut_down('normal')
+
                 if e_name.get().strip() != '' and e_password.get().strip() != '':
                     if v.get() == '1':  # Estudiante
-
                             stu = Student(e_name.get(), e_password.get())
                             stu.create_student(e_name.get(), e_password.get())
                             self.top_info_add.config(text=f'Se agregó {e_name.get()}, su código es {stu.user_id}', bg='white')
-                            self.button_login.config(state='disabled')
+                            self.button_login.config(text='Salir', command= salir__)
                     elif v.get() == '2':  # Instructor
                         inst = Instructor(e_name.get(), e_password.get())
                         inst.create_instructor(e_name.get(), e_password.get())
                         self.top_info_add.config(text=f'Se agregó {e_name.get()}, su código es {inst.user_id}', bg='white')
+                        self.button_login.config(text='Salir', command=salir__)
+
                 elif e_name.get().strip() == '' and e_password.get().strip() == '': self.top_info_add.config(text=f'Ambos estan vacios!! Así no papito...')
                 elif e_name.get().strip() == '': self.top_info_add.config(text=f'El nombre no puede estar vacío!!')
                 elif e_password.get().strip() == '': self.top_info_add.config(text=f'La contraseña no puede estar vacía!!')
                 else: self.top_info_add.config(text=f'No sé, algo no está bien...')
                 self.top_info_add.pack(pady=10)
-                self.shut_down('normal')
+                e_name.config(state='disabled')
+                e_password.config(state='disabled')
+                r_student.config(state='disabled')
+                r_professor.config(state='disabled')
+
 
             self.button_login = tk.Button(self.f_toplevel, text='Crear', font=('Arial', 30, 'bold'), fg='white', width=20,
                                      bg='red', activebackground='#FF9EA2', cursor='hand2', relief='solid', command=create_user_json)
@@ -152,6 +212,8 @@ class Login(PagePrincipal):
 
         def forgot_password():
             self.forgot_level = tk.Toplevel(self.master, width=900, height=700, bg='blue')
+            self.forgot_level.geometry(
+                "+%d+%d" % ((self.master.winfo_width() - 900) // 2, (self.master.winfo_height() - 700) // 2))
             self.forgot_level.resizable(False, False)
             self.forgot_level.pack_propagate(False)
 
@@ -162,8 +224,15 @@ class Login(PagePrincipal):
 
         def show_creators():
             self.show_level = tk.Toplevel(self.master, width=1300, height=900, bg='blue')
+            self.show_level.geometry(
+                "+%d+%d" % ((self.master.winfo_width() - 1300) // 2, (self.master.winfo_height() - 900) // 2))
             self.show_level.resizable(False, False)
             self.show_level.pack_propagate(False)
+
+            developers = PhotoImage(file=r"sources/desarrolladores.png", width=1300, height=900)
+            developers_photo = tk.Label(self.show_level, image=developers)
+            developers_photo.image = developers
+            developers_photo.pack()
 
 
         # Labels
@@ -193,8 +262,8 @@ class Login(PagePrincipal):
         self.inf_text = 'Portal academico de Universidad RAR de Quetzaltenango'
         self.l_inf = tk.Label(self.f_izq, text=self.inf_text, font=('Arial', 15, 'bold'), fg='gray', bg='white')
         self.l_inf.pack(pady=10, padx=30)
-        #self.meet = tk.Button(self.f_izq,text='Empresarios', font=('Arial', 30, 'bold'), fg='white', width=20, bg='white', activebackground='white', cursor='hand2', command=show_creators)
-        #self.meet.pack(pady=20, padx=30)
+        self.meet = tk.Button(self.f_izq,text='Empresarios', font=('Arial', 30, 'bold'), fg='white', width=20, bg='white', activebackground='white', cursor='hand2', command=show_creators)
+        self.meet.pack(pady=20, padx=30)
 
         self.clear_widgest = [self.e_password, self.e_user]
 
