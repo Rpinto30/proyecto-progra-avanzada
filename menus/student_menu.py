@@ -89,7 +89,7 @@ class StudentMenu(Page):
                         f_course_scroll = tk.Frame(self.scr_courses.scr_frame, bg=CL_BG_SCR_L, highlightthickness=3,
                                                    highlightbackground='#0D0C2D')
                         self.scr_courses.pack_on_scroll(f_course_scroll, pady=10, fill='x', padx=2)
-                        b = tk.Button(f_course_scroll, text=str(data.courses[courses_id]['course_name']), cursor='hand2',
+                        b = tk.Button(f_course_scroll, text=str(data.courses[courses_id]['course_name']), cursor='hand2', fg="white",
                                       font=(FONT, 39), width=15, bg=CL_BG_BT_C)
                         b.pack(fill='x')
                         tk.Label(f_course_scroll,
@@ -125,7 +125,7 @@ class StudentMenu(Page):
             for courses_id in data.students[student.user_id]['courses']:
                 f_course_scroll = tk.Frame(self.scr_courses.scr_frame, bg=CL_BG_SCR_L,highlightthickness=3, highlightbackground='#0D0C2D')
                 self.scr_courses.pack_on_scroll(f_course_scroll, pady=10, fill='x',padx=2)
-                b = tk.Button(f_course_scroll, text=str(data.courses[courses_id]['course_name']), font=(FONT,39), width=15, bg=CL_BG_BT_C, cursor='hand2', fg='#E1E2D5')
+                b = tk.Button(f_course_scroll, text=str(data.courses[courses_id]['course_name']), font=(FONT,39), width=15, bg=CL_BG_BT_C, cursor='hand2', fg='white')
                 b.pack( fill='x')
                 tk.Label(f_course_scroll, text=f"{str(courses_id)} - {str(data.instructors[data.courses[courses_id]['teacher']]['name'])}", font=(FONT, 17), anchor='center',bg=CL_BG_SCR_L).pack(fill='x')
                 b.config(command = lambda c=courses_id: entry_menu_course(c))
