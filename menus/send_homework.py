@@ -130,7 +130,7 @@ class SendHomework(Page):
                 self.send.config(state='disabled', text='Enviado')
 
 
-        self.cancel = tk.Button(self.f_right_info_top, text='Cancelar', width=24, height=2, font=(FONT, 25, 'bold'), borderwidth=2, command=cancel_)
+        self.cancel = tk.Button(self.f_right_info_top, text='Cancelar', width=24, height=2, font=(FONT, 25, 'bold'), bg="red", fg="white", borderwidth=2, command=cancel_)
         self.erro_text= tk.Label(self.f_right_info_top, text='', font=(FONT, 30, 'bold'), bg=CL_BG_SEND)
 
         self.send = tk.Button(self.f_right_info_top, text='Enviar', width=24, height=2, font=(FONT,25, 'bold'), borderwidth=2, command=send, state='disabled')
