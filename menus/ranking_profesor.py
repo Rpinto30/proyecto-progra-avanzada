@@ -47,7 +47,7 @@ class StudentNotes(Page):
                 if n > 0 and n1 == len(matrix[0])-2:
                     print(cell)
                     if int(cell) < 65:
-                        self.f_table.confi_font_cell((n, n1))
+                        self.f_table.confi_fg_cell((n, n1), 'red')
 
 
         self.f_table.pack(side='left', fill='y')

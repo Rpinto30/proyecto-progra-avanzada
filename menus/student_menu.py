@@ -210,5 +210,5 @@ class StudentMenuCourse(tk.Frame):
             self.f_down.pack_on_scroll(frame_publish, padx=50, pady=30)
 
 
-#log = StudentMenu(root, Student("pepe", "123", "STU5520"), None)
+#log = StudentMenu(root, Student("pepe", "123", "STU0067"), None)
 #root.mainloop()

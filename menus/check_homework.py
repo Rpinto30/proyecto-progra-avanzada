@@ -210,12 +210,13 @@ class CheckNotes(tk.Frame):
         for students_id in data.courses[self.course.course_id]['students']:
             name = data.students[students_id]['name']
             for material_id, material in data.students[students_id]['material'].items():
-                if data.students[students_id]['material'][material_id]['homework'] == '': state = 'No entregado'
-                else: state = 'Entregado'
-                note = data.students[students_id]['material'][material_id]['obtained_points']
-                note_max = data.students[students_id]['material'][material_id]['points']
-                if material_id == id_hom:
-                    table.append([students_id,name, state, note, note_max])
+                if material_id [:3] == 'HOM':
+                    if data.students[students_id]['material'][material_id]['homework'] == '': state = 'No entregado'
+                    else: state = 'Entregado'
+                    note = data.students[students_id]['material'][material_id]['obtained_points']
+                    note_max = data.students[students_id]['material'][material_id]['points']
+                    if material_id == id_hom:
+                        table.append([students_id,name, state, note, note_max])
         return table
 
     def material_course(self):

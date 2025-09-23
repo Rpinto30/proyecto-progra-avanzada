@@ -123,15 +123,16 @@ class Student(User):
             data.save_data("students")
             for id_, values in data.courses[course_id]['material'].items():
                 print(values)
-                if id_ not in data.students[self.user_id]['material']:
+                if id_ not in data.students[self.user_id]['material'] :
                     homeworkdict = {
                         "tittle": values['tittle'],
                         "description": values['description'],
-                        "points": values['points'],
-                        "course": course_id,
-                        "obtained_points": 0,
-                        "homework": ''
+                        "course": course_id
                     }
+                    if id_ [:3] == 'HOM':
+                        homeworkdict['points'] = values['points']
+                        homeworkdict['obtained_points'] = 0
+                        homeworkdict['homework'] = ""
                     data.students[self.user_id]['material'][id_] = homeworkdict
                     data.save_data("students")
 
